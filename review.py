@@ -14,17 +14,20 @@ class Review:
         self.rating = rating
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
+        self.deleted = False
         if not (1 <= rating <= 5):
             raise ValueError("Rating must be between 1 and 5")
 
     def update(self, **kwargs):
+        if self.deleted:
+            raise ValueError("Cannot update a deleted review.")
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
         self.updated_at = datetime.now()
 
     def delete(self):
-        del self
+        self.deleted = True
 
     def __str__(self):
         return f"Review({self.id}, {self.user}, {self.place}, {self.rating})"

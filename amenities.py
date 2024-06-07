@@ -8,8 +8,7 @@ class Amenities:
     A class representing amenities.
     """
     def __init__(self, id=None, name='', place=''):
-        self.id = str(uuid.uuid4())
-        self.id = self.id
+        self.id = id if id else str(uuid.uuid4())
         self.name = name
         self.place = place
         self.created_at = datetime.now()
@@ -26,3 +25,4 @@ class Amenities:
 
     def __str__(self):
         return f"Amenity(ID: {self.id}, Name: {self.name}, Place: {self.place}, Created: {self.created_at}, Last Updated: {self.updated_at})"
+    

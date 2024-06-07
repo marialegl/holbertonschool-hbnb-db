@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+"""Unittest for Country"""
+
 import unittest
 from country import Country
 
@@ -8,18 +11,18 @@ class TestCountry(unittest.TestCase):
         country = Country(id="1234", name="Testland")
         self.assertEqual(country.id, "1234")
         self.assertEqual(country.name, "Testland")
-        self.assertEqual(country.cities, [])
+        self.assertEqual(country.states, [])
 
-    def test_add_city(self):
+    def test_add_state(self):
         country = Country(id="1234", name="Testland")
-        country.addCity("CityA")
-        self.assertIn("CityA", country.cities)
+        country.add_state("StateA")
+        self.assertIn("StateA", country.states)
 
-    def test_remove_city(self):
-        country = Country(id="1234", name="Testland", cities=["CityA", "CityB"])
-        country.removeCity("CityA")
-        self.assertNotIn("CityA", country.cities)
-        country.removeCity("CityC")
+    def test_remove_state(self):
+        country = Country(id="1234", name="Testland", states=["StateA", "StateB"])
+        country.remove_state("StateA")
+        self.assertNotIn("StateA", country.states)
+        country.remove_state("StateC")
 
     def test_update_name(self):
         country = Country(id="1234", name="Testland")
@@ -27,8 +30,8 @@ class TestCountry(unittest.TestCase):
         self.assertEqual(country.name, "Newland")
 
     def test_str_representation(self):
-        country = Country(id="1234", name="Testland", cities=["CityA", "CityB"])
-        expected_str = "Country(ID: 1234, Name: Testland, Cities: [CityA, CityB])"
+        country = Country(id="1234", name="Testland", states=["StateA", "StateB"])
+        expected_str = "Country(ID: 1234, Name: Testland, States: [StateA, StateB])"
         self.assertEqual(str(country), expected_str)
 
 if __name__ == '__main__':

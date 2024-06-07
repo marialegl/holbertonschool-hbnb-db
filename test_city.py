@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+"""Unittest for City"""
+
 import unittest
 from datetime import datetime
 from city import City 
@@ -5,19 +8,20 @@ from city import City
 class TestCity(unittest.TestCase):
 
     def setUp(self):
-        self.city = City(name="New York", country="USA", place="Manhattan")
+        self.city = City(name="New York", state="New York", place="Manhattan")
 
     def test_initialization(self):
         self.assertEqual(self.city.name, "New York")
-        self.assertEqual(self.city.country, "USA")
+        self.assertEqual(self.city.state, "New York")
         self.assertEqual(self.city.place, "Manhattan")
         self.assertIsInstance(self.city.id, str)
         self.assertIsInstance(self.city.updated_at, datetime)
+        self.assertIsInstance(self.city.created_at, datetime)
 
     def test_update(self):
-        self.city.update(name="Los Angeles", country="USA")
+        self.city.update(name="Los Angeles", state="California")
         self.assertEqual(self.city.name, "Los Angeles")
-        self.assertEqual(self.city.country, "USA")
+        self.assertEqual(self.city.state, "California")
         self.assertNotEqual(self.city.updated_at, self.city.created_at)
 
     def test_add_place(self):
@@ -37,10 +41,10 @@ class TestCity(unittest.TestCase):
         self.assertNotIn("Queens", self.city.place)
 
     def test_str_method(self):
-        self.assertIn("City: New York", str(self.city))
-        self.assertIn("Country: USA", str(self.city))
-        self.assertIn("Place(s): Manhattan", str(self.city))
-
+        str_output = str(self.city)
+        self.assertIn("City: New York", str_output)
+        self.assertIn("State: New York", str_output)
+        self.assertIn("Place(s): Manhattan", str_output)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+"""Unittest for Amenities"""
+
 import unittest
 from datetime import datetime
 from amenities import Amenities
