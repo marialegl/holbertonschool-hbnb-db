@@ -14,6 +14,8 @@ class Review:
         self.rating = rating
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
+        if not (1 <= rating <= 5):
+            raise ValueError("Rating must be between 1 and 5")
 
     def update(self, **kwargs):
         for key, value in kwargs.items():
