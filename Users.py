@@ -20,27 +20,29 @@ class Users:
         self.First_name = First_name
         self.Last_name = Last_name
         self.email = email
-        Users.existing_emails.add(email)
+        Users.existing_email.add(email)
         self.password = password
         self.create_time = datetime.now()
         self.update_time = datetime.now()
-        
+
     def update(self, **kwargs):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.updated_at = datetime.now() 
+        self.updated_at = datetime.now()
 
     def delete(self):
         del self
 
     def __str__(self):
-        return f"User(Id:{self.id}, name:{self.First_name}, email:{self.email})"
+        return f"User(Id: {self.id}, name: {self.First_name},\
+ email: {self.email})"
+
 
 class Host(Users):
 
-    def __init__(self, id_user):
-        super().__init__(id_user)
+    def __init__(self, id_user, First_name, Last_name, email, password):
+        super().__init__(id_user, First_name, Last_name, email, password)
         self.name_place = []
         self.amenities = []
 
@@ -51,21 +53,20 @@ class Host(Users):
         self.name_place.remove(place)
 
     def add_amenities(self, amenities):
-        self.amenities.append(amenities) 
+        self.amenities.append(amenities)
 
     def remove_amenities(self, amenities):
         self.amenities.remove(amenities)
 
+
 class Guest(Users):
 
-    def __init__(self, id_user):
-
-        super().__init__(id_user)
+    def __init__(self, id_user, First_name, Last_name, email, password):
+        super().__init__(id_user, First_name, Last_name, email, password)
         self.comment = []
 
     def add_review(self, comment):
         self.comment.append(comment)
-        
 
     def remove_review(self, comment):
         self.comment.remove(comment)
