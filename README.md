@@ -8,4 +8,7 @@ You can view the UML diagram [aquí](https://files.slack.com/files-tmb/T0423U1MW
 
 ## Repositorio de GitHub
 
+Repositorio del proyecto: [holbertonschool-hbnb](URL_DE_TU_REPOSITORIO)
+
 Project repository: [holbertonschool-hbnb](https://github.com/marialegl/holbertonschool-hbnb/tree/main)
+
