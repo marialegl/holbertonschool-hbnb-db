@@ -8,7 +8,8 @@ class Amenities:
     A class representing amenities.
     """
     def __init__(self, id=None, name='', place=''):
-        self.id = str(uuid.uuid4()) if id is None else id
+        self.id = str(uuid.uuid4())
+        self.id = self.id
         self.name = name
         self.place = place
         self.created_at = datetime.now()
