@@ -2,11 +2,13 @@
 """ Class Place with the necessary attributes and methods."""
 
 from datetime import datetime
+import uuid
+
 
 class Place():
     def __init__(self, id,  name, description, address,
                  city, latitude, longitude, host,
-                 number_of_rooms, bathrooms, price_per_night, max_guests)
+                 number_of_rooms, bathrooms, price_per_night, max_guests):
         self.id = str(uuid.uuid4())
         self_id = id
         self_name = name
@@ -30,7 +32,7 @@ class Place():
     def remove_amenity(self, amenity):
         self.amenities.remove(amenity)
 
-    def update(self. **kwargs):
+    def update(self, **kwargs):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
