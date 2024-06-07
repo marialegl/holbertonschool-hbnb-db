@@ -8,20 +8,22 @@ class Country:
     A class representing a country.
     """
 
-    def __init__(self, id, name, cities=None):
-        self.id = str(uuid.uuid4())
-        self.id = id
+    def __init__(self, name, id=None, states=None):
+        self.id = id if id else str(uuid.uuid4())
         self.name = name
-        self.cities = cities if cities else []
+        self.states = states if states else []
 
-    def addCity(self, city):
-        self.cities.append(city)
-
-    def removeCity(self, city):
-        if city in self.cities:
-            self.cities.remove(city)
+    def add_state(self, state):
+        if state not in self.states:
+            self.states.append(state)
         else:
-            print(f"{city} not found in cities")
+            print(f"{state} is already in the list of states")
+
+    def remove_state(self, state):
+        if state in self.states:
+            self.states.remove(state)
+        else:
+            print(f"{state} not found in states")
 
     def update(self, new_name):
         self.name = new_name
@@ -30,5 +32,5 @@ class Country:
         pass
 
     def __str__(self):
-        cities_str = ', '.join(self.cities)
-        return f"Country(ID: {self.id}, Name: {self.name}, Cities: [{cities_str}])"
+        states_str = ', '.join(self.states)
+        return f"Country(ID: {self.id}, Name: {self.name}, States: [{states_str}])"

@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+"""Unittest for Host"""
+
 import unittest
 from datetime import datetime
 from Users import Users, Host

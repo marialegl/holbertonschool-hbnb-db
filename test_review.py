@@ -49,7 +49,7 @@ class TestReview(unittest.TestCase):
     def test_delete_review(self):
         """Test deleting the review."""
         self.review.delete()
-        self.assertIsNone(self.review.__dict__)
+        self.assertTrue(self.review.deleted)
 
 if __name__ == "__main__":
     unittest.main()

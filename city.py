@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 from datetime import datetime
 import uuid
 
@@ -7,10 +8,10 @@ class City:
     """
     A class representing a city.
     """
-    def __init__(self, name, country, place):
+    def __init__(self, name, state, place):
         self.id = str(uuid.uuid4())
         self.name = name
-        self.country = country
+        self.state = state
         self.place = place
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
@@ -38,4 +39,4 @@ class City:
             print(f"{removed_place} not found in places")
 
     def __str__(self):
-        return f"City: {self.name}, Country: {self.country}, Place(s): {self.place}, Last Updated: {self.updated_at}"
+        return f"City: {self.name}, State: {self.state}, Place(s): {self.place}, Last Updated: {self.updated_at}"
