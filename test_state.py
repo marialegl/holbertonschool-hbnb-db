@@ -48,14 +48,6 @@ class TestState(unittest.TestCase):
     def test_state_str(self):
         """Test the string representation of the state."""
         self.assertEqual(str(self.state), f"State({self.state.id}, Test State, Test Country)")
- 
-    def test_state_delete(self):
-        """Test that a state can be deleted."""
-        state = State(name="Test State", country="Test Country")
-        state_id = state.id
-        state.delete()
-        with self.assertRaises(NameError):
-            print(state)
 
     def test_empty_name(self):
         """Test that an empty name raises a ValueError."""

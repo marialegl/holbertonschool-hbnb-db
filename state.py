@@ -13,6 +13,10 @@ class State:
         self.cities = []
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
+        if not name:
+            raise ValueError("Name cannot be empty")
+        if not country:
+            raise ValueError("Country cannot be empty")
 
     def add_city(self, city):
         self.cities.append(city)
