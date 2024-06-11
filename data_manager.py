@@ -24,7 +24,7 @@ class DataManager(IPersistenceManager):
         """
         Initializes a new instance of DataManager with an empty storage dictionary.
         """
-        self.storage = {}
+        self.storage = {'Users': {}}
 
     def save(self, entity):
         """
@@ -46,6 +46,13 @@ class DataManager(IPersistenceManager):
         if entity_type not in self.storage:
             self.storage[entity_type] = {}
         self.storage[entity_type][entity_id] = entity
+
+    def get_all(self):
+        """
+        get s list of all users
+        """
+        return [entity for entity_type in self.storage.values()
+                for entity in entity_type.values()] 
 
     def get(self, entity_id, entity_type):
         """
