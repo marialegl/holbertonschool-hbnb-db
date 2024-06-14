@@ -25,16 +25,16 @@ class TestReview(unittest.TestCase):
         self.assertEqual(self.review.text, "Great place to stay!")
         self.assertEqual(self.review.rating, 5)
         self.assertIsNotNone(self.review.id)
-        self.assertIsInstance(self.review.created_at, datetime)
-        self.assertIsInstance(self.review.updated_at, datetime)
+        self.assertIsInstance(self.review.create_time, datetime)
+        self.assertIsInstance(self.review.update_time, datetime)
 
     def test_update_review(self):
         """Test updating the attributes of a review."""
-        previous_updated_at = self.review.updated_at
+        previous_update_time = self.review.update_time
         self.review.update(text="Amazing experience!", rating=4)
         self.assertEqual(self.review.text, "Amazing experience!")
         self.assertEqual(self.review.rating, 4)
-        self.assertNotEqual(self.review.updated_at, previous_updated_at)
+        self.assertNotEqual(self.review.update_time, previous_update_time)
 
     def test_review_str(self):
         """Test the string representation of the review."""

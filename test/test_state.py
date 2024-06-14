@@ -19,8 +19,8 @@ class TestState(unittest.TestCase):
         self.assertEqual(self.state.name, "Test State")
         self.assertEqual(self.state.country, "Test Country")
         self.assertIsNotNone(self.state.id)
-        self.assertIsInstance(self.state.created_at, datetime)
-        self.assertIsInstance(self.state.updated_at, datetime)
+        self.assertIsInstance(self.state.create_time, datetime)
+        self.assertIsInstance(self.state.update_time, datetime)
 
     def test_add_city(self):
         """Test adding cities to a state."""
@@ -40,10 +40,10 @@ class TestState(unittest.TestCase):
         self.assertEqual(self.state.country, "Updated Country")
 
     def test_update_timestamp(self):
-        """Test that the updated_at timestamp is updated on attribute update."""
-        previous_updated_at = self.state.updated_at
+        """Test that the update_time timestamp is updated on attribute update."""
+        previous_update_time = self.state.update_time
         self.state.update(name="Another Update")
-        self.assertNotEqual(self.state.updated_at, previous_updated_at)
+        self.assertNotEqual(self.state.update_time, previous_update_time)
 
     def test_state_str(self):
         """Test the string representation of the state."""

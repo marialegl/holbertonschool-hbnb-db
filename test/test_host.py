@@ -9,14 +9,13 @@ from model.users import User, Host
 class TestHost(unittest.TestCase):
 
     def setUp(self):
-        Users.existing_email.clear()
-        self.host = Host("2", "Alice", "Smith",
+        User.existing_email.clear()
+        self.host = Host("Alice", "Smith",
                          "alice.smith@example.com", "password123")
 
     def test_create_host(self):
-        self.assertEqual(self.host.id, "2")
-        self.assertEqual(self.host.First_name, "Alice")
-        self.assertEqual(self.host.Last_name, "Smith")
+        self.assertEqual(self.host.first_name, "Alice")
+        self.assertEqual(self.host.last_name, "Smith")
         self.assertEqual(self.host.email, "alice.smith@example.com")
         self.assertEqual(self.host.password, "password123")
         self.assertIsInstance(self.host.create_time, datetime)
