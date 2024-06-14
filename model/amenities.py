@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from datetime import datetime
-from base import Base
+from .base import Base
 
 class Amenities(Base):
     """

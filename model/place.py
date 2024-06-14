@@ -2,7 +2,7 @@
 """ Class Place with the necessary attributes and methods."""
 
 from datetime import datetime
-from base import Base
+from .base import Base
 
 class Place(Base):
     def __init__(self, name, description, address,

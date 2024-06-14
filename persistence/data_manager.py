@@ -1,5 +1,5 @@
 #!usr/bin/python3
-from persistence_manager import IPersistenceManager
+from .persistence_manager import IPersistenceManager
 
 
 class DataManager(IPersistenceManager):

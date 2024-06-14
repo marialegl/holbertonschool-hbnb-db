@@ -3,7 +3,7 @@
 
 import unittest
 from datetime import datetime
-from model.users import Users, Guest
+from model.users import User, Guest
 
 
 class TestGuest(unittest.TestCase):

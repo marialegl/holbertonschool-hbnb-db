@@ -2,7 +2,7 @@
 """ Class Review with the necessary attributes and methods."""
 
 from datetime import datetime
-from base import Base
+from .base import Base
 
 class Review(Base):
     def __init__(self, user, place, text, rating):

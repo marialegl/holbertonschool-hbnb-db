@@ -1,20 +1,26 @@
 #!/usr/bin/python3
 from datetime import datetime
-from base import Base
+import uuid  # Para generar IDs únicos
+from .base import Base
 
 class User(Base):
     """
-        This class will inherit the atributes
-        to the class Host and Guest
+    This class will inherit the attributes
+    to the class Host and Guest
     """
     existing_email = set()
 
     def __init__(self, first_name, last_name, email, password):
-
+        if email in User.existing_email:
+            raise ValueError("Email already exists")
+        self.id = str(uuid.uuid4())  # Generar un ID único
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.password = password
+        self.create_time = datetime.now()
+        self.update_time = datetime.now()
+        User.existing_email.add(email)
 
     def to_dict(self):
         return {
@@ -31,20 +37,18 @@ class User(Base):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.updated_at = datetime.now()
+        self.update_time = datetime.now()  # Corregido de `self.updated_at`
 
     def delete(self):
-        del self
+        User.existing_email.discard(self.email)
+        # Normalmente, se manejaría con lógica de eliminación de la base de datos
 
     def __str__(self):
-        return f"User(Id: {self.id}, name: {self.First_name},\
- email: {self.email})"
-
+        return f"User(Id: {self.id}, name: {self.first_name}, email: {self.email})"
 
 class Host(User):
-
-    def __init__(self, First_name, Last_name, email, password):
-        super().__init__(First_name, Last_name, email, password)
+    def __init__(self, first_name, last_name, email, password):
+        super().__init__(first_name, last_name, email, password)
         self.name_place = []
         self.amenities = []
 
@@ -60,11 +64,9 @@ class Host(User):
     def remove_amenities(self, amenities):
         self.amenities.remove(amenities)
 
-
 class Guest(User):
-
-    def __init__(self, First_name, Last_name, email, password):
-        super().__init__(First_name, Last_name, email, password)
+    def __init__(self, first_name, last_name, email, password):
+        super().__init__(first_name, last_name, email, password)
         self.comment = []
 
     def add_review(self, comment):

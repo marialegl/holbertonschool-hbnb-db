@@ -2,7 +2,7 @@
 """ Class State with the necessary attributes and methods."""
 
 from datetime import datetime
-from base import Base
+from .base import Base
 
 class State(Base):
     def __init__(self, name, country):
