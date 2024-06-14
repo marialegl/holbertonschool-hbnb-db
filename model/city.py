@@ -1,41 +1,33 @@
-#!/usr/bin/python3
-
 from datetime import datetime
 from model.base import Base
-
 
 class City(Base):
     """
     A class representing a city.
     """
-    def __init__(self, name, state, place):
+    def __init__(self, name, population, country_code):
         super().__init__()
         self.name = name
-        self.state = state
-        self.place = place
+        self.population = population
+        self.country_code = country_code
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
 
     def update(self, **kwargs):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.update_time = datetime.now()
+        self.updated_at = datetime.utcnow()
 
-    def delete(self):
-        pass
-
-    def add_place(self, additional_place):
-        self.place += ", " + additional_place
-        self.update_time = datetime.now()
-
-    def remove_place(self, removed_place):
-        places = [p.strip() for p in self.place.split(",")]
-        if removed_place in places:
-            places.remove(removed_place)
-            self.place = ", ".join(places)
-            self.update_time = datetime.now()
-        else:
-            print(f"{removed_place} not found in places")
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'population': self.population,
+            'country_code': self.country_code,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }
 
     def __str__(self):
-        return f"City: {self.name}, State: {self.state},\
- Place(s): {self.place}, Last Updated: {self.update_time}"
+        return f"City: {self.name}, Population: {self.population}, Country Code: {self.country_code}, Last Updated: {self.updated_at}"
