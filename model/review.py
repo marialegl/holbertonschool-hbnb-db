@@ -2,10 +2,11 @@
 """ Class Review with the necessary attributes and methods."""
 
 from datetime import datetime
-from base import Base
+from model.base import Base
 
 class Review(Base):
     def __init__(self, user, place, text, rating):
+        super().__init__()
         self.user = user
         self.place = place
         self.text = text
@@ -20,7 +21,7 @@ class Review(Base):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.updated_at = datetime.now()
+        self.update_time = datetime.now()
 
     def delete(self):
         self.deleted = True

@@ -2,12 +2,13 @@
 """ Class Place with the necessary attributes and methods."""
 
 from datetime import datetime
-from base import Base
+from model.base import Base
 
 class Place(Base):
     def __init__(self, name, description, address,
                  city, latitude, longitude, host,
                  number_of_rooms, bathrooms, price_per_night, max_guests):
+        super().__init__()
         self.name = name
         self.description = description
         self.address = address
@@ -35,7 +36,7 @@ class Place(Base):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.updated_at = datetime.now()
+        self.update_time = datetime.now()
 
     def delete(self):
         del self

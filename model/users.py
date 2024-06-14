@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from datetime import datetime
-from base import Base
+from model.base import Base
 
 class User(Base):
     """
@@ -11,6 +11,7 @@ class User(Base):
 
     def __init__(self, first_name, last_name, email, password):
 
+        super().__init__()
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -31,20 +32,20 @@ class User(Base):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.updated_at = datetime.now()
+        self.update_time = datetime.now()
 
     def delete(self):
         del self
 
     def __str__(self):
-        return f"User(Id: {self.id}, name: {self.First_name},\
+        return f"User(Id: {self.id}, name: {self.first_name},\
  email: {self.email})"
 
 
 class Host(User):
 
-    def __init__(self, First_name, Last_name, email, password):
-        super().__init__(First_name, Last_name, email, password)
+    def __init__(self, first_name, last_name, email, password):
+        super().__init__(first_name, last_name, email, password)
         self.name_place = []
         self.amenities = []
 
@@ -63,8 +64,8 @@ class Host(User):
 
 class Guest(User):
 
-    def __init__(self, First_name, Last_name, email, password):
-        super().__init__(First_name, Last_name, email, password)
+    def __init__(self, first_name, last_name, email, password):
+        super().__init__(first_name, last_name, email, password)
         self.comment = []
 
     def add_review(self, comment):

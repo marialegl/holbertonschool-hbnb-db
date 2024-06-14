@@ -2,10 +2,11 @@
 """ Class State with the necessary attributes and methods."""
 
 from datetime import datetime
-from base import Base
+from model.base import Base
 
 class State(Base):
     def __init__(self, name, country):
+        super().__init__()
         self.name = name
         self.country = country
         self.cities = []
@@ -24,7 +25,7 @@ class State(Base):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.updated_at = datetime.now()
+        self.update_time = datetime.now()
 
     def delete(self):
         del self

@@ -1,12 +1,13 @@
 #!/usr/bin/python3
-from base import Base
+from model.base import Base
 
 class Country(Base):
     """
     A class representing a country.
     """
 
-    def __init__(self, name, id=None, states=None):
+    def __init__(self, name, states=None):
+        super().__init__()
         self.name = name
         self.states = states if states else []
 
@@ -14,7 +15,7 @@ class Country(Base):
         if state not in self.states:
             self.states.append(state)
         else:
-            print(f"{state} is already in the list of states")
+            print(f"{state} this state already exist")
 
     def remove_state(self, state):
         if state in self.states:
