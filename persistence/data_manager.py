@@ -1,5 +1,5 @@
 #!usr/bin/python3
-from persistence_manager import IPersistenceManager
+from persistence.persistence_manager import IPersistenceManager
 
 
 class DataManager(IPersistenceManager):
@@ -41,11 +41,10 @@ class DataManager(IPersistenceManager):
             entity = {'id': '123', 'name': 'Alice'}
             data_manager.save(entity)
         """
-        entity_id = entity.get('id')
         entity_type = type(entity).__name__
         if entity_type not in self.storage:
             self.storage[entity_type] = {}
-        self.storage[entity_type][entity_id] = entity
+        self.storage[entity_type][entity.id] = entity.to_dict()
 
     def get_all(self):
         """
@@ -85,10 +84,9 @@ class DataManager(IPersistenceManager):
             updated_entity = {'id': '123', 'name': 'Alice', 'age': 30}
             data_manager.update(updated_entity)
         """
-        entity_id = entity.get('id')
         entity_type = type(entity).__name__
-        if entity_type in self.storage and entity_id in self.storage[entity_type]:
-            self.storage[entity_type][entity_id] = entity
+        if entity_type in self.storage and entity.id in self.storage[entity_type]:
+            self.storage[entity_type][entity.id] = entity.to_dict()
 
     def delete(self, entity_id, entity_type):
         """
