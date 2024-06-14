@@ -2,6 +2,7 @@
 from datetime import datetime
 from model.base import Base
 
+
 class User(Base):
     """
         This class will inherit the atributes

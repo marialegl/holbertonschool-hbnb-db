@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from model.base import Base
 
+
 class Country(Base):
     """
     A class representing a country.
@@ -31,4 +32,5 @@ class Country(Base):
 
     def __str__(self):
         states_str = ', '.join(self.states)
-        return f"Country(ID: {self.id}, Name: {self.name}, States: [{states_str}])"
+        return f"Country(ID: {self.id}, Name: {self.name},\
+ States: [{states_str}])"

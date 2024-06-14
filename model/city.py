@@ -3,6 +3,7 @@
 from datetime import datetime
 from model.base import Base
 
+
 class City(Base):
     """
     A class representing a city.
@@ -36,4 +37,5 @@ class City(Base):
             print(f"{removed_place} not found in places")
 
     def __str__(self):
-        return f"City: {self.name}, State: {self.state}, Place(s): {self.place}, Last Updated: {self.update_time}"
+        return f"City: {self.name}, State: {self.state},\
+ Place(s): {self.place}, Last Updated: {self.update_time}"

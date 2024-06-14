@@ -4,6 +4,7 @@
 from datetime import datetime
 from model.base import Base
 
+
 class State(Base):
     def __init__(self, name, country):
         super().__init__()

@@ -4,6 +4,7 @@
 from datetime import datetime
 from model.base import Base
 
+
 class Review(Base):
     def __init__(self, user, place, text, rating):
         super().__init__()

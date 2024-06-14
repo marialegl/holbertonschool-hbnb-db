@@ -4,10 +4,13 @@
 from datetime import datetime
 from model.base import Base
 
+
 class Place(Base):
     def __init__(self, name, description, address,
                  city, latitude, longitude, host,
-                 number_of_rooms, bathrooms, price_per_night, max_guests):
+                 number_of_rooms, number_bathrooms,
+                 price_per_night, max_guests, amenities=[]):
+
         super().__init__()
         self.name = name
         self.description = description
@@ -16,10 +19,10 @@ class Place(Base):
         self.latitude = latitude
         self.longitude = longitude
         self.number_of_rooms = number_of_rooms
-        self.bathrooms = bathrooms
+        self.number_of_bathrooms = number_bathrooms
         self.price_per_night = price_per_night
         self.max_guests = max_guests
-        self.amenities = []
+        self.amenities = amenities
         self.host = host
         if self.host is not None:
             raise ValueError("This place already has a host")
