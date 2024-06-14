@@ -39,7 +39,8 @@ def create_user():
     if not valid:
         return jsonify({'error': message}), 400
     
-    if any(user['email'] == data['email'] for user in data_manager.storage.get('Users', {}).values()):
+    if any(user['email'] == data['email'] for user
+           in data_manager.storage.get('User', {}).values()):
         return jsonify({'error': 'Email already exists'}), 409
     
     user = User(
@@ -48,19 +49,19 @@ def create_user():
         email=data['email'],
         password=data.get('password', '')
     )
-    data_manager.save(user.to_dict())
+    data_manager.save(user)
     return jsonify(user.to_dict()), 201
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    users = list(data_manager.storage.get('Users', {}).values())
+    users = list(data_manager.storage.get('User', {}).values())
     return jsonify(users), 200
 
 @app.route('/users/<user_id>', methods=['GET'])
 def get_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({'error': 'Invalid user ID'}), 400
-    user = data_manager.get(user_id, 'Users')
+    user = data_manager.get(user_id, 'User')
     if user is None:
         return jsonify({'error': 'User not found'}), 404
     return jsonify(user), 200
@@ -72,7 +73,7 @@ def update_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({'error': 'Invalid user ID'}), 400
     
-    user = data_manager.get(user_id, 'Users')
+    user = data_manager.get(user_id, 'User')
 
     if user is None:
         return jsonify({'error': 'User not found'}), 404
@@ -82,11 +83,12 @@ def update_user(user_id):
     if not valid:
         return jsonify({'error': message}), 400
     
-    if any(user['email'] == data['email'] and user['id'] != user_id for user in data_manager.storage.get('Users', {}).values()):
+    if any(user['email'] == data['email'] and user['id'] != user_id for user
+           in data_manager.storage.get('User', {}).values()):
+        
         return jsonify({'error': 'Email already exists'}), 409
     
     updated_user = User(
-        id_user=user_id,
         first_name=data['first_name'],
         last_name=data['last_name'],
         email=data['email'],
@@ -100,11 +102,11 @@ def delete_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({'error': 'Invalid user ID'}), 400
     
-    user = data_manager.get(user_id, 'Users')
+    user = data_manager.get(user_id, 'User')
     if user is None:
         return jsonify({'error': 'User not found'}), 404
     
-    data_manager.delete(user_id, 'Users')
+    data_manager.delete(user_id, 'User')
     return jsonify({}), 204
 
 if __name__ == '__main__':
