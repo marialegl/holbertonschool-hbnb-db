@@ -11,7 +11,6 @@ class TestPlace(unittest.TestCase):
     def setUp(self):
         """Setup a default Place instance for testing."""
         self.place = Place(
-            id=None,
             name="Test Place",
             description="A cozy place",
             address="123 Test St",
@@ -30,14 +29,13 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(self.place.name, "Test Place")
         self.assertEqual(self.place.city, "Testville")
         self.assertIsNotNone(self.place.id)
-        self.assertIsInstance(self.place.created_at, datetime)
-        self.assertIsInstance(self.place.updated_at, datetime)
+        self.assertIsInstance(self.place.create_time, datetime)
+        self.assertIsInstance(self.place.update_time, datetime)
 
     def test_unique_host(self):
         """Test that a place can only have one host."""
         with self.assertRaises(ValueError):
             Place(
-                id=None,
                 name="Test Place 2",
                 description="Another cozy place",
                 address="456 Test Ave",
@@ -69,10 +67,10 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(self.place.price_per_night, 150)
 
     def test_update_timestamp(self):
-        """Test that the updated_at timestamp is updated on attribute update."""
-        previous_updated_at = self.place.updated_at
+        """Test that the update_time timestamp is updated on attribute update."""
+        previous_update_time = self.place.update_time
         self.place.update(name="Updated Place")
-        self.assertNotEqual(self.place.updated_at, previous_updated_at)
+        self.assertNotEqual(self.place.update_time, previous_update_time)
 
     def test_place_str(self):
         """Test the string representation of the place."""

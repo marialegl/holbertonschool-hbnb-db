@@ -15,20 +15,20 @@ class TestCity(unittest.TestCase):
         self.assertEqual(self.city.state, "New York")
         self.assertEqual(self.city.place, "Manhattan")
         self.assertIsInstance(self.city.id, str)
-        self.assertIsInstance(self.city.updated_at, datetime)
-        self.assertIsInstance(self.city.created_at, datetime)
+        self.assertIsInstance(self.city.update_time, datetime)
+        self.assertIsInstance(self.city.create_time, datetime)
 
     def test_update(self):
         self.city.update(name="Los Angeles", state="California")
         self.assertEqual(self.city.name, "Los Angeles")
         self.assertEqual(self.city.state, "California")
-        self.assertNotEqual(self.city.updated_at, self.city.created_at)
+        self.assertNotEqual(self.city.update_time, self.city.create_time)
 
     def test_add_place(self):
-        initial_updated_at = self.city.updated_at
+        initial_update_time = self.city.update_time
         self.city.add_place("Brooklyn")
         self.assertIn("Brooklyn", self.city.place)
-        self.assertNotEqual(self.city.updated_at, initial_updated_at)
+        self.assertNotEqual(self.city.update_time, initial_update_time)
 
     def test_remove_place(self):
         self.city.add_place("Brooklyn")

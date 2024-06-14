@@ -2,7 +2,7 @@
 import unittest
 import json
 from api.api_controller import app, data_manager
-from model.users import Users
+from model.users import User
 import uuid
 
 
