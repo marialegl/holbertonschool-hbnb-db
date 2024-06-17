@@ -13,6 +13,13 @@ class Amenities(Base):
         self.name = name
         self.place = place
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'place': self.place
+        }
+
     def update(self, **kwargs):
         for key, value in kwargs.items():
             if hasattr(self, key):

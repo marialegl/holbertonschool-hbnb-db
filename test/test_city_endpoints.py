@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+"""Unittest for City Endpoints"""
+
 import unittest
 import json
 from api.api_country_city import app, data_manager
