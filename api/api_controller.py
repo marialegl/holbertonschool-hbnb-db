@@ -106,6 +106,7 @@ def update_user(user_id):
         email=data["email"],
         password=data.get("password", user["password"]),
     )
+    updated_user.id = user_id
     data_manager.update(updated_user)
     return jsonify(updated_user.to_dict()), 200
 
