@@ -6,12 +6,11 @@ from persistence.data_manager import DataManager
 
 app = Flask(__name__)
 data_manager = DataManager()
-app.config['data_manager'] = data_manager  
 
 @app.route('/amenities', methods=['POST'])
 def create_amenity():
     data = request.get_json()
-    amenity = Amenities(name=data['name'], place=data.get('place', ''))
+    amenity = Amenities(name=data['name'])
     data_manager.save(amenity)
     return jsonify(amenity.to_dict()), 201
 
@@ -33,7 +32,9 @@ def update_amenity(amenity_id):
     amenity = data_manager.get(amenity_id, 'Amenities')
     if not amenity:
         abort(404, description="Amenity not found")
-    amenity_instance = Amenities(**amenity)
+
+    amenity_instance = Amenities(name=data['name'])
+    amenity_instance.id = amenity_id
     data_manager.update(amenity_instance)
     return jsonify(amenity_instance.to_dict()), 200
 
