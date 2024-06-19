@@ -17,6 +17,15 @@
             "password": "Estrella90",
             "create_time": "2024-06-19T00:17:31.267955",
             "update_time": "2024-06-19T00:17:31.267959"
+        },
+        "91cda5c5-7d5d-4261-94c1-080e435855c3": {
+            "id": "91cda5c5-7d5d-4261-94c1-080e435855c3",
+            "first_name": "Pato",
+            "last_name": "Donald",
+            "email": "Lucas@gmail.com",
+            "password": "34524kl",
+            "create_time": "2024-06-19T11:00:19.310247",
+            "update_time": "2024-06-19T11:00:19.310263"
         }
     },
     "City": {
@@ -81,36 +90,6 @@
             "host": "727b993d-c17d-4b8c-b7b1-f026bf906fc3",
             "created_at": "2024-06-19T02:53:33.335571",
             "updated_at": "2024-06-19T02:53:33.335573"
-        },
-        "58182b44-2f72-4e54-92f2-6b2f55a43b33": {
-            "id": "58182b44-2f72-4e54-92f2-6b2f55a43b33",
-            "name": "Beach House",
-            "description": "A beautiful beach house with ocean view",
-            "address": "123 Beach Street",
-            "city": "City: New York, Population: 1200000, Country Code: US, Last Updated: 2024-06-19 03:12:20.980291",
-            "latitude": 40.712776,
-            "longitude": -74.005974,
-            "host_id": "727b993d-c17d-4b8c-b7b1-f026bf906fc3",
-            "number_of_rooms": 3,
-            "number_of_bathrooms": 2,
-            "price_per_night": 150.0,
-            "max_guests": 4,
-            "amenities": [
-                {
-                    "id": "9cc3d48d-2ce6-4e24-a853-dfb4b902b573",
-                    "name": "wifi"
-                },
-                {
-                    "id": "0ca118f5-f2d6-4c1d-bd72-9498d8f683d0",
-                    "name": "Kitchen"
-                },
-                {
-                    "id": "f80bc580-0184-4d78-9001-4ae0c77a60f5",
-                    "name": "Washing machine"
-                }
-            ],
-            "created_at": "2024-06-19T03:12:20.980385",
-            "updated_at": "2024-06-19T03:12:20.980387"
         }
     }
 }
