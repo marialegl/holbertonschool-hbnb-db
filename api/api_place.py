@@ -41,7 +41,6 @@ def validate_price(price):
     if not isinstance(price, (int, float)) or price < 0:
         abort(400, description="Price per night must be a valid non-negative numerical value")
 
-# Función para validar que el ID de la ciudad sea válido
 def validate_city_id(city_id):
     if not find_city(city_id):
         abort(400, description="Invalid city_id, city does not exist")
@@ -51,7 +50,6 @@ def validate_amenity_ids(amenity_ids):
         if not data_manager.get(amenity_id, 'Amenities'):
             abort(400, description=f"Invalid amenity_id {amenity_id}, amenity does not exist")
 
-# Ruta para crear un nuevo lugar
 @app.route('/places', methods=['POST'])
 def create_place():
     data = request.get_json()
@@ -67,12 +65,11 @@ def create_place():
     validate_city_id(data.get('city_id'))
     validate_amenity_ids(data.get('amenity_ids', []))
 
-    # Crear nueva instancia de Place usando los atributos heredados
     new_place = Place(
         name=data.get('name'),
         description=data.get('description'),
         address=data.get('address'),
-        city=find_city(data.get('city_id')),  # Set city using the helper function
+        city=find_city(data.get('city_id')),
         latitude=data.get('latitude'),
         longitude=data.get('longitude'),
         host_id=data.get('host_id'),
@@ -83,18 +80,14 @@ def create_place():
         amenities=find_amenities(data.get('amenity_ids', []))
     )
 
-    # Guardar el nuevo lugar en el data manager
     data_manager.save(new_place)
 
-    # Devolver la respuesta con el nuevo lugar creado
     return jsonify(new_place.to_dict()), 201
 
-# Ruta para obtener todos los lugares
 @app.route('/places', methods=['GET'])
 def get_places():
-    places = data_manager.get_all('Place')
-    detailed_places = [add_detailed_info(place) for place in places]
-    return jsonify(detailed_places), 200
+    places = list(data_manager.storage.get('Place', {}).values())
+    return jsonify(places), 200
 
 # Ruta para obtener un lugar por su ID
 @app.route('/places/<place_id>', methods=['GET'])
@@ -107,7 +100,6 @@ def get_place(place_id):
     detailed_place = add_detailed_info(place.to_dict())
     return jsonify(detailed_place), 200
 
-# Ruta para actualizar un lugar por su ID
 @app.route('/places/<place_id>', methods=['PUT'])
 def update_place(place_id):
     data = request.json
@@ -133,7 +125,6 @@ def update_place(place_id):
     if 'amenity_ids' in data:
         validate_amenity_ids(data.get('amenity_ids', []))
 
-    # Actualizar los datos del lugar
     place.name = data.get('name', place.name)
     place.description = data.get('description', place.description)
     place.address = data.get('address', place.address)
@@ -146,31 +137,25 @@ def update_place(place_id):
     place.max_guests = data.get('max_guests', place.max_guests)
     place.amenities = find_amenities(data.get('amenity_ids', [])) if 'amenity_ids' in data else place.amenities
 
-    # Guardar los cambios en el data manager
     data_manager.update(place)
 
-    # Devolver la respuesta con el lugar actualizado
     return jsonify(place.to_dict()), 200
 
-# Ruta para eliminar un lugar por su ID
 @app.route('/places/<place_id>', methods=['DELETE'])
 def delete_place(place_id):
     place_data = data_manager.get(place_id, 'Place')
     if not place_data:
         abort(404, description="Place not found")
     
-    # Eliminar el lugar del data manager
     data_manager.delete(place_id, 'Place')
 
-    # Devolver la respuesta de eliminación exitosa
-    return jsonify({"message": "Place deleted successfully"}), 200
+    return jsonify({"message": "Place deleted successfully"}), 204
 
 def add_detailed_info(place):
     place["city"] = data_manager.get(place["city"]["id"], "City").to_dict() if place.get("city") else None
     place["amenities"] = [data_manager.get(amenity["id"], "Amenities").to_dict() for amenity in place.get("amenities", [])]
     place["host"] = data_manager.get(place["host_id"], "User").to_dict() if place.get("host_id") else None
     return place
-
 
 if __name__ == '__main__':
     app.run(debug=True)
