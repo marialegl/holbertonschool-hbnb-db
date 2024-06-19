@@ -1,6 +1,7 @@
 #!usr/bin/python3
 from persistence.persistence_manager import IPersistenceManager
-
+import json
+import os
 
 class DataManager(IPersistenceManager):
     """
@@ -20,11 +21,29 @@ class DataManager(IPersistenceManager):
         delete(entity_id, entity_type): Deletes an entity by its ID and type.
     """
 
-    def __init__(self):
+    def __init__(self, file_path="data.json"):
         """
         Initializes a new instance of DataManager with an empty storage dictionary.
         """
-        self.storage = {}
+        self.file_path = file_path
+        self.storage = self.load_from_file()
+
+    def load_from_file(self):
+        """
+        Loads data from the JSON file if it exists, otherwise returns an empty dictionary.
+        """
+        try:
+            with open(self.file_path, "r") as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    def save_to_file(self):
+        """
+        Saves the current storage dictionary to the JSON file
+        """
+        with open(self.file_path, "w") as file:
+            json.dump(self.storage, file, indent=4, default=str)
 
     def save(self, entity):
         """
@@ -45,13 +64,20 @@ class DataManager(IPersistenceManager):
         if entity_type not in self.storage:
             self.storage[entity_type] = {}
         self.storage[entity_type][entity.id] = entity.to_dict()
+        self.save_to_file()
 
-    def get_all(self):
+    def get_all(self, entity_type=None):
         """
         get s list of all users
         """
-        return [entity for entity_type in self.storage.values()
-                for entity in entity_type.values()] 
+        if entity_type:
+            return [entity for entity_type_key, entities in self.storage.items()
+                if entity_type_key == entity_type
+                for entity in entities.values()] 
+
+        else:
+            return [entity for entities in self.storage.values()
+                    for entity in entities.values()]
 
     def get(self, entity_id, entity_type):
         """
@@ -87,6 +113,7 @@ class DataManager(IPersistenceManager):
         entity_type = type(entity).__name__
         if entity_type in self.storage and entity.id in self.storage[entity_type]:
             self.storage[entity_type][entity.id] = entity.to_dict()
+            self.save_to_file()
 
     def delete(self, entity_id, entity_type):
         """
@@ -101,3 +128,4 @@ class DataManager(IPersistenceManager):
         """
         if entity_type in self.storage:
             self.storage[entity_type].pop(entity_id, None)
+            self.save_to_file()

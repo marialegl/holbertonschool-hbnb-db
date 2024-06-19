@@ -28,7 +28,7 @@ def validate_city_data(data, is_update=False):
     if not find_country_by_code(data['country_code']):
         abort(404, description=f"Country with code '{data['country_code']}' not found")
     if not is_update:
-        if any(city['name'] == data['name'] and city['country_code'] == data['country_code'] for city in data_manager.get_all()):
+        if any(city['name'] == data['name'] and city['country_code'] == data['country_code'] for city in data_manager.get_all('City')):
             abort(409, description=f"City '{data['name']}' already exists in country '{data['country_code']}'")
 
 
@@ -71,7 +71,7 @@ def add_city():
 
 @app.route('/cities', methods=['GET'])
 def get_all_cities():
-    cities = [entity for entity in data_manager.get_all() if isinstance(entity, City)]
+    cities = [entity for entity in data_manager.get_all('City') if isinstance(entity, City)]
     return jsonify([city.to_dict() for city in cities]), 200
 
 
