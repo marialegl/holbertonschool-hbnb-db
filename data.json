@@ -1,0 +1,31 @@
+{
+    "User": {
+        "727b993d-c17d-4b8c-b7b1-f026bf906fc3": {
+            "id": "727b993d-c17d-4b8c-b7b1-f026bf906fc3",
+            "first_name": "Nicolas",
+            "last_name": "Rondon",
+            "email": "nicolas12@gmail.com",
+            "password": "newpassword",
+            "create_time": "2024-06-18T19:12:23.174080",
+            "update_time": "2024-06-18T19:12:23.174085"
+        }
+    },
+    "City": {
+        "e790c43c-a5ee-40a6-8dff-17d0e15e7524": {
+            "id": "e790c43c-a5ee-40a6-8dff-17d0e15e7524",
+            "name": "New City",
+            "population": 1000000,
+            "country_code": "US",
+            "created_at": "2024-06-19 01:08:37.548360",
+            "updated_at": "2024-06-19 01:08:37.548367"
+        },
+        "486d01a9-916e-479e-8408-ea80e143d4db": {
+            "id": "486d01a9-916e-479e-8408-ea80e143d4db",
+            "name": "New York",
+            "population": 1200000,
+            "country_code": "US",
+            "created_at": "2024-06-19 01:13:10.191537",
+            "updated_at": "2024-06-19 01:13:10.191537"
+        }
+    }
+}
