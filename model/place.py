@@ -31,7 +31,7 @@ class Place(Base):
             'name': self.name,
             'description': self.description,
             'address': self.address,
-            'city': self.city,
+            'city': self.city.to_dict() if self.city else None,
             'latitude': self.latitude,
             'longitude': self.longitude,
             'host_id': self.host_id,
