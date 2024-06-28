@@ -6,15 +6,27 @@ from model.base import Base
 
 
 class Review(Base):
-    def __init__(self, user, place, text, rating):
+    def __init__(self, user_id, place_id, rating, comment):
         super().__init__()
-        self.user = user
-        self.place = place
-        self.text = text
+        self.user_id = user_id
+        self.place_id = place_id
         self.rating = rating
+        self.comment = comment
         self.deleted = False
         if not (1 <= rating <= 5):
             raise ValueError("Rating must be between 1 and 5")
+
+    def to_dict(self):
+        return{
+            'id': self.id,
+            'user_id': self.user_id,
+            'place_id': self.place_id,
+            'rating': self.rating,
+            'comment': self.comment,
+            'created_at': self.create_time.isoformat(),
+            'updated_at': self.update_time.isoformat()
+        }
+
 
     def update(self, **kwargs):
         if self.deleted:
