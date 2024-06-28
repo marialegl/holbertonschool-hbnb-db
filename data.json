@@ -61,35 +61,53 @@
         }
     },
     "Place": {
-        "fe847fe7-7329-48c9-aa05-a07186e597f6": {
-            "id": "fe847fe7-7329-48c9-aa05-a07186e597f6",
+        "4a436ec3-e133-4e2b-843c-487b9ab6c420": {
+            "id": "4a436ec3-e133-4e2b-843c-487b9ab6c420",
             "name": "Beach House",
-            "description": "A beautiful beach house with ocean view",
-            "address": "123 Beach Street",
-            "city": "City: New York, Population: 1200000, Country Code: US, Last Updated: 2024-06-19 02:53:33.335421",
-            "latitude": 40.712776,
-            "longitude": -74.005974,
+            "description": "A nice house by the beach.",
+            "address": "637 New Ocean Drive",
+            "city": {
+                "id": "44275435-3733-429e-9c33-5466f50ed62d",
+                "name": "Detroit",
+                "population": 500000,
+                "country_code": "US",
+                "created_at": "2024-06-27T21:57:36.338040",
+                "updated_at": "2024-06-27T21:57:36.338041"
+            },
+            "latitude": 33.0189,
+            "longitude": -120.4909,
+            "host_id": "91cda5c5-7d5d-4261-94c1-080e435855c3",
             "number_of_rooms": 3,
             "number_of_bathrooms": 2,
-            "price_per_night": 150.0,
-            "max_guests": 4,
+            "price_per_night": 223.0,
+            "max_guests": 5,
             "amenities": [
                 {
-                    "id": "7c8be1ec-b717-4210-906b-be32a0534ff9",
-                    "name": "wifi"
+                    "id": "3b051675-c320-409e-b54d-c9e8aacbc89e",
+                    "name": "Washing machine"
                 },
                 {
-                    "id": "92888210-6a33-4aac-a2f8-6acddd5639a5",
+                    "id": "001c77e8-9e65-432a-a5a2-ad0cc0d37381",
                     "name": "Kitchen"
                 },
                 {
-                    "id": "37728579-e09a-453c-9ae5-7eb74e64bb78",
-                    "name": "Washing machine"
+                    "id": "bf4b5a70-64b8-4d36-b616-b23d5630a172",
+                    "name": "wifi"
                 }
             ],
-            "host": "727b993d-c17d-4b8c-b7b1-f026bf906fc3",
-            "created_at": "2024-06-19T02:53:33.335571",
-            "updated_at": "2024-06-19T02:53:33.335573"
+            "created_at": "2024-06-27T21:57:36.338215",
+            "updated_at": "2024-06-27T21:57:36.338215"
+        }
+    },
+    "Review": {
+        "eefb2b70-2d26-4b6b-acc7-c4f1a9b79cb1": {
+            "id": "eefb2b70-2d26-4b6b-acc7-c4f1a9b79cb1",
+            "user_id": "8716a20b-486b-46e2-975d-4650ae91f67b",
+            "place_id": "4a436ec3-e133-4e2b-843c-487b9ab6c420",
+            "rating": 4,
+            "comment": "Good place,i would like it to have wifi",
+            "created_at": "2024-06-27T19:27:11.165421",
+            "updated_at": "2024-06-27T21:25:27.590204"
         }
     }
 }
