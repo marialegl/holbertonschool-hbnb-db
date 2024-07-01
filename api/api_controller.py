@@ -2,11 +2,12 @@
 from flask import Flask, jsonify, request
 from model.users import User
 from persistence.data_manager import DataManager
+from model.database import session
 import re
 from uuid import UUID
 
 app = Flask(__name__)
-data_manager = DataManager()
+data_manager = DataManager(session)
 
 
 def validate_email(email):
@@ -44,10 +45,8 @@ def create_user():
     if not valid:
         return jsonify({"error": message}), 400
 
-    if any(
-        user["email"] == data["email"]
-        for user in data_manager.storage.get("User", {}).values()
-    ):
+    existing_user = User.query.filter_by(email=data["email"]).first()
+    if existing_user:
         return jsonify({"error": "Email already exists"}), 409
 
     user = User(
@@ -62,18 +61,18 @@ def create_user():
 
 @app.route("/users", methods=["GET"])
 def get_users():
-    users = list(data_manager.storage.get("User", {}).values())
-    return jsonify(users), 200
+    users = data_manager.get_all('User')
+    return jsonify([user for user in users]), 200
 
 
 @app.route("/users/<user_id>", methods=["GET"])
 def get_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
-    user = data_manager.get(user_id, "User")
+    user = data_manager.get(user_id, 'User')
     if user is None:
         return jsonify({"error": "User not found"}), 404
-    return jsonify(user), 200
+    return jsonify(user.to_dict()), 200
 
 
 @app.route("/users/<user_id>", methods=["PUT"])
@@ -83,7 +82,7 @@ def update_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
 
-    user = data_manager.get(user_id, "User")
+    user = data_manager.get(user_id, 'User')
 
     if user is None:
         return jsonify({"error": "User not found"}), 404
@@ -93,22 +92,17 @@ def update_user(user_id):
     if not valid:
         return jsonify({"error": message}), 400
 
-    if any(
-        user["email"] == data["email"] and user["id"] != user_id
-        for user in data_manager.storage.get("User", {}).values()
-    ):
-
+    existing_user =  data_manager.get_all('User')
+    if any(u['email'] == data["email"] and u['id'] != user_id for u in existing_user):
         return jsonify({"error": "Email already exists"}), 409
 
-    updated_user = User(
-        first_name=data["first_name"],
-        last_name=data["last_name"],
-        email=data["email"],
-        password=data.get("password", user["password"]),
-    )
-    updated_user.id = user_id
-    data_manager.update(updated_user)
-    return jsonify(updated_user.to_dict()), 200
+    user.first_name = data["first_name"]
+    user.last_name = data["last_name"]
+    user.email = data["email"]
+    user.password = data.get("password", user.password)
+    
+    data_manager.update(user)
+    return jsonify(user.to_dict()), 200
 
 
 @app.route("/users/<user_id>", methods=["DELETE"])
@@ -116,12 +110,12 @@ def delete_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
 
-    user = data_manager.get(user_id, "User")
+    user = data_manager.get(user_id, 'User')
     if user is None:
         return jsonify({"error": "User not found"}), 404
 
-    data_manager.delete(user_id, "User")
-    return jsonify({}), 204
+    data_manager.delete(user_id, 'User')
+    return '', 204
 
 
 if __name__ == "__main__":
