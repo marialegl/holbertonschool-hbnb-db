@@ -2,7 +2,7 @@
 from flask import Flask, jsonify, request
 from model.users import User
 from persistence.data_manager import DataManager
-from model.database import session
+from persistence.database import session
 import re
 from uuid import UUID
 

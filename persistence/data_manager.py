@@ -1,131 +1,69 @@
 #!usr/bin/python3
 from persistence.persistence_manager import IPersistenceManager
-import json
-import os
+from persistence.database import db
 
 class DataManager(IPersistenceManager):
     """
-    A concrete implementation of IPersistenceManager using in-memory storage.
-
-    This class provides methods for saving, retrieving, updating, and deleting 
-    entities in an in-memory storage dictionary. Each entity is stored based 
-    on its type and a unique identifier.
-    
-    Attributes:
-        storage (dict): A dictionary to store entities, organized by type.
-    
-    Methods:
-        save(entity): Saves a new entity to the storage.
-        get(entity_id, entity_type): Retrieves an entity by its ID and type.
-        update(entity): Updates an existing entity in the storage.
-        delete(entity_id, entity_type): Deletes an entity by its ID and type.
+    Implements the persistence manager using SQLAlchemy for database operations.
     """
-
-    def __init__(self, file_path="data.json"):
-        """
-        Initializes a new instance of DataManager with an empty storage dictionary.
-        """
-        self.file_path = file_path
-        self.storage = self.load_from_file()
-
-    def load_from_file(self):
-        """
-        Loads data from the JSON file if it exists, otherwise returns an empty dictionary.
-        """
-        try:
-            with open(self.file_path, "r") as file:
-                return json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            return {}
-
-    def save_to_file(self):
-        """
-        Saves the current storage dictionary to the JSON file
-        """
-        with open(self.file_path, "w") as file:
-            json.dump(self.storage, file, indent=4, default=str)
-
+    
     def save(self, entity):
-        """
-        Saves a new entity to the storage.
+        db.session.add(entity)
+        db.session.commit()
 
-        The entity must have an 'id' field used as a unique identifier. Entities
-        are stored in a nested dictionary structure, organized by their type and ID.
+    def get(self, entity_type, entity_id):
+        """
+        Retrieves an entity by its ID and type.
         
         Args:
-            entity: The entity to be saved. It should be a dictionary-like object with
-                    an 'id' key.
-        
-        Example:
-            entity = {'id': '123', 'name': 'Alice'}
-            data_manager.save(entity)
-        """
-        entity_type = type(entity).__name__
-        if entity_type not in self.storage:
-            self.storage[entity_type] = {}
-        self.storage[entity_type][entity.id] = entity.to_dict()
-        self.save_to_file()
-
-    def get_all(self, entity_type=None):
-        """
-        get s list of all users
-        """
-        if entity_type:
-            return [entity for entity_type_key, entities in self.storage.items()
-                if entity_type_key == entity_type
-                for entity in entities.values()] 
-
-        else:
-            return [entity for entities in self.storage.values()
-                    for entity in entities.values()]
-
-    def get(self, entity_id, entity_type):
-        """
-        Retrieves an entity from the storage by its ID and type.
-
-        Args:
-            entity_id: The unique identifier of the entity.
             entity_type: The type of the entity to retrieve.
-        
+            entity_id: The ID of the entity to retrieve.
+            
         Returns:
-            The entity if found, or None if not found.
-        
-        Example:
-            entity = data_manager.get('123', 'dict')
+            The entity instance or None if not found.
         """
-        return self.storage.get(entity_type, {}).get(entity_id, None)
+        return db.session.get(entity_type, entity_id)
 
     def update(self, entity):
         """
-        Updates an existing entity in the storage.
-
-        The entity must have an 'id' field used as a unique identifier. If the 
-        entity exists in the storage, it will be updated with the new data.
+        Updates an entity in the database.
         
         Args:
-            entity: The entity with updated data. It should be a dictionary-like object 
-                    with an 'id' key.
+            entity: The entity instance with updated data.
+        """
+        db.session.commit()
+
+    def delete(self, entity):
+        """
+        Deletes an entity from the database.
         
-        Example:
-            updated_entity = {'id': '123', 'name': 'Alice', 'age': 30}
-            data_manager.update(updated_entity)
-        """
-        entity_type = type(entity).__name__
-        if entity_type in self.storage and entity.id in self.storage[entity_type]:
-            self.storage[entity_type][entity.id] = entity.to_dict()
-            self.save_to_file()
-
-    def delete(self, entity_id, entity_type):
-        """
-        Deletes an entity from the storage by its ID and type.
-
         Args:
-            entity_id: The unique identifier of the entity.
-            entity_type: The type of the entity to delete.
-        
-        Example:
-            data_manager.delete('123', 'dict')
+            entity: The entity instance to delete.
         """
-        if entity_type in self.storage:
-            self.storage[entity_type].pop(entity_id, None)
-            self.save_to_file()
+        db.session.delete(entity)
+        db.session.commit()
+
+    def query_all(self, entity_type):
+        """
+        Retrieves all entities of a specific type.
+        
+        Args:
+            entity_type: The type of entities to retrieve.
+            
+        Returns:
+            A list of entity instances.
+        """
+        return db.session.query(entity_type).all()
+
+    def query_all_by_filter(self, entity_type, filter_condition):
+        """
+        Retrieves all entities of a specific type that match the filter condition.
+        
+        Args:
+            entity_type: The type of entities to retrieve.
+            filter_condition: A SQLAlchemy filter condition.
+            
+        Returns:
+            A list of entity instances that match the filter condition.
+        """
+        return db.session.query(entity_type).filter(filter_condition).all()

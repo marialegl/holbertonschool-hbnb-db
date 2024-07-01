@@ -1,8 +1,36 @@
 #!/usr/bin/python3
+import os
 import cmd
-from api import api_controller
+import threading
+from flask import Flask
+from persistence.database import db
+from api import api_controller, api_amenities, api_country_city, api_place, api_review
 
 
+# Configurar la aplicación Flask
+app = Flask(__name__)
+
+# Configuración de la base de datos
+db_uri = 'sqlite:///development.db' if os.getenv('FLASK_ENV') == 'development' else os.getenv('DATABASE_URL', 'sqlite:///mydatabase.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Inicializar la base de datos con la aplicación
+db.init_app(app)
+
+# Registrar todos los Blueprints de Flask
+app.register_blueprint(api_controller.app)
+app.register_blueprint(api_amenities.app)
+app.register_blueprint(api_country_city.app)
+app.register_blueprint(api_place.app)
+app.register_blueprint(api_review.app)
+
+def run_flask_app():
+    with app.app_context():
+        db.create_all()  # Crear todas las tablas de la base de datos dentro del contexto de la aplicación
+        app.run(debug=True, use_reloader=False)
+
+# CRUD en la consola
 class CRUD:
     def __init__(self):
         self.data = []
@@ -32,6 +60,7 @@ class CRUD:
             print(f"Item '{removed_item}' deleted.")
         else:
             print("Invalid index.")
+
 
 
 class CRUDConsole(cmd.Cmd):
@@ -72,5 +101,10 @@ class CRUDConsole(cmd.Cmd):
         return True
 
 if __name__ == '__main__':
+    # Ejecutar el servidor Flask en un hilo separado
+    flask_thread = threading.Thread(target=run_flask_app)
+    flask_thread.daemon = True
+    flask_thread.start()
+
     crud = CRUD()
     CRUDConsole(crud).cmdloop()

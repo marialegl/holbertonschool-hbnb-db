@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-from datetime import datetime
-from model.base import Base
-from sqlalchemy import Column, String, DateTime
+from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from datetime import datetime
+from model.base import Base  # Asegúrate de tener db configurado en database.py
 
-class User(Base):
+class User(db.Model):
     """
         This class will inherit the atributes
         to the class Host and Guest
