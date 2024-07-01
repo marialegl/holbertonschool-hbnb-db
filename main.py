@@ -3,7 +3,7 @@ import os
 import cmd
 import threading
 from flask import Flask
-from persistence.database import db  # Importa el objeto db de model.database
+from persistence.database import db
 from api import api_controller, api_amenities, api_country_city, api_place, api_review
 
 
@@ -61,8 +61,7 @@ class CRUD:
         else:
             print("Invalid index.")
 
-# Consola para CRUD
-import cmd
+
 
 class CRUDConsole(cmd.Cmd):
     intro = "Welcome to the CRUD console. Type help or ? to list commands.\n"
