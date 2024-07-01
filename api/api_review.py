@@ -6,89 +6,83 @@ from model.users import User
 from persistence.data_manager import DataManager
 from datetime import datetime
 
+
 app = Flask(__name__)
 data_manager = DataManager()
 
-@app.route('/places/<place_id>/reviews', methods=['POST'])
-def create_review(place_id):
+def validate_review_data(data):
+    if 'user_id' not in data or 'place_id' not in data or 'rating' not in data:
+        abort(400, description="Missing required fields: user_id, place_id, rating")
+    if not data_manager.get(User, data['user_id']):
+        abort(404, description=f"User with ID '{data['user_id']}' not found")
+    if not data_manager.get(Place, data['place_id']):
+        abort(404, description=f"Place with ID '{data['place_id']}' not found")
+    if not isinstance(data['rating'], int) or not (1 <= data['rating'] <= 5):
+        abort(400, description="Rating must be an integer between 1 and 5")
+
+@app.route('/reviews', methods=['POST'])
+def create_review():
     data = request.get_json()
-    user_id = data.get('user_id')
-    rating = data.get('rating')
-    comment = data.get('comment')
-    
-    # Validaciones
-    if not user_id or not rating or not comment:
-        abort(400, description="Missing required fields")
-    if not 1 <= rating <= 5:
-        abort(400, description="Rating must be between 1 and 5")
-    if not data_manager.get(user_id, "User"):
-        abort(404, description="User not found")
-    if not data_manager.get(place_id, "Place"):
-        abort(404, description="Place not found")
-    place = data_manager.get(place_id, "Place")
-    if place["host_id"] == user_id:
-        abort(400, description="Hosts cannot review their own place")
-    
-    review = Review(place_id=place_id, user_id=user_id, rating=rating, comment=comment)
-    data_manager.save(review)
-    return jsonify(review.to_dict()), 201
+    validate_review_data(data)
+    new_review = Review(
+        user_id=data['user_id'],
+        place_id=data['place_id'],
+        rating=data['rating'],
+        comment=data.get('comment')
+    )
+    data_manager.save(new_review)
+    return jsonify(new_review.to_dict()), 201
 
-@app.route('/users/<user_id>/reviews', methods=['GET'])
-def get_user_reviews(user_id):
-    if not data_manager.get(user_id, "User"):
-        abort(404, description="User not found")
-    reviews = [review for review in data_manager.get_all("Review") if review["user_id"] == user_id]
-    return jsonify(reviews), 200
-
-@app.route('/places/<place_id>/reviews', methods=['GET'])
-def get_place_reviews(place_id):
-    if not data_manager.get(place_id, "Place"):
-        abort(404, description="Place not found")
-    reviews = [review for review in data_manager.get_all("Review") if review["place_id"] == place_id]
-    return jsonify(reviews), 200
+@app.route('/reviews', methods=['GET'])
+def get_reviews():
+    reviews = data_manager.query_all(Review)
+    return jsonify([review.to_dict() for review in reviews]), 200
 
 @app.route('/reviews/<review_id>', methods=['GET'])
 def get_review(review_id):
-    review = data_manager.get(review_id, "Review")
+    review = data_manager.get(Review, review_id)
     if not review:
         abort(404, description="Review not found")
-    return jsonify(review), 200
+    return jsonify(review.to_dict()), 200
 
 @app.route('/reviews/<review_id>', methods=['PUT'])
 def update_review(review_id):
-
-    review = data_manager.get(review_id, 'Review')
+    review = data_manager.get(Review, review_id)
     if not review:
         abort(404, description="Review not found")
-    
-    data = request.get_json()
-    review['rating'] = data.get('rating', review['rating'])
-    review['comment'] = data.get('comment', review['comment'])
-    
-    if review['rating'] < 1 or review['rating'] > 5:
-        abort(400, description="Rating must be between 1 and 5")
 
-    review['updated_at'] = datetime.now().isoformat()
-    
-    updated_review = Review(
-        place_id=review['place_id'],
-        user_id=review['user_id'],
-        rating=review['rating'],
-        comment=review['comment']
-    )
-    updated_review.id = review['id']
-    updated_review.create_time = datetime.fromisoformat(review['created_at'])
-    updated_review.update_time = datetime.fromisoformat(review['updated_at'])
-    
-    data_manager.update(updated_review)
-    
-    return jsonify(updated_review.to_dict()), 200
+    data = request.get_json()
+    if 'rating' in data:
+        validate_review_data({'user_id': review.user_id, 'place_id': review.place_id, 'rating': data['rating']})
+    review.rating = data.get('rating', review.rating)
+    review.comment = data.get('comment', review.comment)
+    review.updated_at = datetime.utcnow()
+
+    data_manager.update(review)
+    return jsonify(review.to_dict()), 200
+
+@app.route('/users/<user_id>/reviews', methods=['GET'])
+def get_user_reviews(user_id):
+    user = data_manager.get(User, user_id)
+    if not user:
+        abort(404, description="User not found")
+    reviews = data_manager.query_all_by_filter(Review, Review.user_id == user_id)
+    return jsonify([review.to_dict() for review in reviews]), 200
+
+@app.route('/places/<place_id>/reviews', methods=['GET'])
+def get_place_reviews(place_id):
+    place = data_manager.get(Place, place_id)
+    if not place:
+        abort(404, description="Place not found")
+    reviews = data_manager.query_all_by_filter(Review, Review.place_id == place_id)
+    return jsonify([review.to_dict() for review in reviews]), 200
 
 @app.route('/reviews/<review_id>', methods=['DELETE'])
 def delete_review(review_id):
-    if not data_manager.get(review_id, "Review"):
+    review = data_manager.get(Review, review_id)
+    if not review:
         abort(404, description="Review not found")
-    data_manager.delete(review_id, "Review")
+    data_manager.delete(review)
     return '', 204
 
 if __name__ == '__main__':
