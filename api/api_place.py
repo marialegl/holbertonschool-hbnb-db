@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort, Flask
 from model.place import Place
 from model.city import City
 from model.amenities import Amenities
 from model.users import User
 from persistence.data_manager import DataManager
 from persistence.database import db
+
 
 app = Flask(__name__)
 data_manager = DataManager()

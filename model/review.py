@@ -1,6 +1,5 @@
 #!usr/bin/python3
 """ Class Review with the necessary attributes and methods."""
-
 from datetime import datetime
 from model.base import Base
 from sqlalchemy import Column, String, Integer, ForeignKey

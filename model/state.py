@@ -1,6 +1,5 @@
 #!usr/bin/python3
 """ Class State with the necessary attributes and methods."""
-
 from datetime import datetime
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship

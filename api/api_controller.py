@@ -7,7 +7,7 @@ import re
 from uuid import UUID
 
 app = Flask(__name__)
-data_manager = DataManager()  # No necesitas pasar 'session' ahora, ya que usarás 'db.session' internamente
+data_manager = DataManager()
 
 
 def validate_email(email):
@@ -45,9 +45,10 @@ def create_user():
     if not valid:
         return jsonify({"error": message}), 400
 
-    existing_user = User.query.filter_by(email=data["email"]).first()
+    existing_user = data_manager.query_all_by_filter(User, User.email == data["email"])
     if existing_user:
         return jsonify({"error": "Email already exists"}), 409
+
 
     user = User(
         first_name=data["first_name"],
@@ -92,7 +93,7 @@ def update_user(user_id):
     if not valid:
         return jsonify({"error": message}), 400
 
-    existing_user = User.query.filter(User.email == data["email"], User.id != user_id).first()
+    existing_user = data_manager.query_all_by_filter(User, User.email == data["email"], User.id != user_id)
     if existing_user:
         return jsonify({"error": "Email already exists"}), 409
 

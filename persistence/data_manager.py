@@ -2,6 +2,7 @@
 from persistence.persistence_manager import IPersistenceManager
 from persistence.database import db
 
+
 class DataManager(IPersistenceManager):
     """
     Implements the persistence manager using SQLAlchemy for database operations.

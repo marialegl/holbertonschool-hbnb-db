@@ -57,7 +57,7 @@ def update_review(review_id):
         validate_review_data({'user_id': review.user_id, 'place_id': review.place_id, 'rating': data['rating']})
     review.rating = data.get('rating', review.rating)
     review.comment = data.get('comment', review.comment)
-    review.updated_at = datetime.utcnow()
+    review.updated_at = datetime.now()
 
     data_manager.update(review)
     return jsonify(review.to_dict()), 200

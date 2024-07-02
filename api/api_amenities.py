@@ -1,8 +1,6 @@
 #!/usr/bin/python3
-
-
 from flask import Flask, jsonify, request
-from model.amenities import Amenities  # Importación corregida
+from model.amenities import Amenities
 from persistence.data_manager import DataManager
 from persistence.database import db
 
