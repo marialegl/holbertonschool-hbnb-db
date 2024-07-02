@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 from datetime import datetime
 import uuid
-import os
-from sqlalchemy import Column, String, DateTime, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import validates, sessionmaker
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.orm import validates
 from persistence.database import db
 
 

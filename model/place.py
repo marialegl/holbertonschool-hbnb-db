@@ -1,6 +1,5 @@
 #!usr/bin/python3
 """ Class Place with the necessary attributes and methods."""
-
 from datetime import datetime
 from sqlalchemy import Column, String, Float, Integer
 from model.base import Base

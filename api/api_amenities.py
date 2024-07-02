@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-from flask import Flask, jsonify, request, abort
-from model.amenities import Amenities  # Importación corregida
+from flask import Flask, jsonify, request
+from model.amenities import Amenities
 from persistence.data_manager import DataManager
+from persistence.database import db
 
 app = Flask(__name__)
 data_manager = DataManager()
@@ -19,12 +20,12 @@ def create_amenity():
 
 @app.route('/amenities', methods=['GET'])
 def get_amenities():
-    amenities = data_manager.all('Amenities')  # Nombre de clase corregido
+    amenities = data_manager.query_all(Amenities)  # Usar la clase en lugar del nombre
     return jsonify([amenity.to_dict() for amenity in amenities]), 200
 
 @app.route('/amenities/<amenity_id>', methods=['GET'])
 def get_amenity(amenity_id):
-    amenity = data_manager.get('Amenities', amenity_id)  # Nombre de clase corregido
+    amenity = data_manager.get(Amenities, amenity_id)  # Usar la clase en lugar del nombre
     if not amenity:
         return jsonify({"error": "Amenity not found"}), 404
     return jsonify(amenity.to_dict()), 200
@@ -32,7 +33,7 @@ def get_amenity(amenity_id):
 @app.route('/amenities/<amenity_id>', methods=['PUT'])
 def update_amenity(amenity_id):
     data = request.get_json()
-    amenity = data_manager.get('Amenities', amenity_id)  # Nombre de clase corregido
+    amenity = data_manager.get(Amenities, amenity_id)  # Usar la clase en lugar del nombre
     if not amenity:
         return jsonify({"error": "Amenity not found"}), 404
 
@@ -45,9 +46,10 @@ def update_amenity(amenity_id):
 
 @app.route('/amenities/<amenity_id>', methods=['DELETE'])
 def delete_amenity(amenity_id):
-    if not data_manager.get('Amenities', amenity_id):  # Nombre de clase corregido
+    amenity = data_manager.get(Amenities, amenity_id)  # Usar la clase en lugar del nombre
+    if not amenity:
         return jsonify({"error": "Amenity not found"}), 404
-    data_manager.delete(amenity_id, 'Amenities')  # Nombre de clase corregido
+    data_manager.delete(amenity)
     return '', 204
 
 if __name__ == '__main__':

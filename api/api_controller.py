@@ -2,12 +2,12 @@
 from flask import Flask, jsonify, request
 from model.users import User
 from persistence.data_manager import DataManager
-from persistence.database import session
+from persistence.database import db
 import re
 from uuid import UUID
 
 app = Flask(__name__)
-data_manager = DataManager(session)
+data_manager = DataManager()
 
 
 def validate_email(email):
@@ -45,9 +45,10 @@ def create_user():
     if not valid:
         return jsonify({"error": message}), 400
 
-    existing_user = User.query.filter_by(email=data["email"]).first()
+    existing_user = data_manager.query_all_by_filter(User, User.email == data["email"])
     if existing_user:
         return jsonify({"error": "Email already exists"}), 409
+
 
     user = User(
         first_name=data["first_name"],
@@ -61,15 +62,15 @@ def create_user():
 
 @app.route("/users", methods=["GET"])
 def get_users():
-    users = data_manager.get_all('User')
-    return jsonify([user for user in users]), 200
+    users = data_manager.query_all(User)
+    return jsonify([user.to_dict() for user in users]), 200
 
 
 @app.route("/users/<user_id>", methods=["GET"])
 def get_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
-    user = data_manager.get(user_id, 'User')
+    user = data_manager.get(User, user_id)
     if user is None:
         return jsonify({"error": "User not found"}), 404
     return jsonify(user.to_dict()), 200
@@ -82,7 +83,7 @@ def update_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
 
-    user = data_manager.get(user_id, 'User')
+    user = data_manager.get(User, user_id)
 
     if user is None:
         return jsonify({"error": "User not found"}), 404
@@ -92,8 +93,8 @@ def update_user(user_id):
     if not valid:
         return jsonify({"error": message}), 400
 
-    existing_user =  data_manager.get_all('User')
-    if any(u['email'] == data["email"] and u['id'] != user_id for u in existing_user):
+    existing_user = data_manager.query_all_by_filter(User, User.email == data["email"], User.id != user_id)
+    if existing_user:
         return jsonify({"error": "Email already exists"}), 409
 
     user.first_name = data["first_name"]
@@ -110,13 +111,15 @@ def delete_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
 
-    user = data_manager.get(user_id, 'User')
+    user = data_manager.get(User, user_id)
     if user is None:
         return jsonify({"error": "User not found"}), 404
 
-    data_manager.delete(user_id, 'User')
+    data_manager.delete(user)
     return '', 204
 
 
 if __name__ == "__main__":
+    with app.app_context():  # Contexto de la aplicación
+        db.create_all()  # Crear todas las tablas en la base de datos
     app.run(debug=True)

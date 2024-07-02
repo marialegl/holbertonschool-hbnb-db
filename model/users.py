@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from model.base import Base  # Asegúrate de tener db configurado en database.py
 
-class User(db.Model):
+class User(Base):
     """
         This class will inherit the atributes
         to the class Host and Guest

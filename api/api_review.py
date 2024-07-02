@@ -4,13 +4,14 @@ from model.review import Review
 from model.place import Place
 from model.users import User
 from persistence.data_manager import DataManager
+from persistence.database import db
 from datetime import datetime
-
 
 app = Flask(__name__)
 data_manager = DataManager()
 
 def validate_review_data(data):
+    """Validates the input data for creating or updating a review."""
     if 'user_id' not in data or 'place_id' not in data or 'rating' not in data:
         abort(400, description="Missing required fields: user_id, place_id, rating")
     if not data_manager.get(User, data['user_id']):
@@ -56,7 +57,7 @@ def update_review(review_id):
         validate_review_data({'user_id': review.user_id, 'place_id': review.place_id, 'rating': data['rating']})
     review.rating = data.get('rating', review.rating)
     review.comment = data.get('comment', review.comment)
-    review.updated_at = datetime.utcnow()
+    review.updated_at = datetime.now()
 
     data_manager.update(review)
     return jsonify(review.to_dict()), 200
@@ -86,4 +87,6 @@ def delete_review(review_id):
     return '', 204
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Crear todas las tablas dentro del contexto de la aplicación
     app.run(debug=True)
