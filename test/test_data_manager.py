@@ -1,46 +1,53 @@
 #!/usr/bin/python3
-"""Unittest for Data Manager"""
-
-
+"""Pruebas para cada operación CRUD en tu DataManager"""
 import unittest
-from model.users import User
 from persistence.data_manager import DataManager
+from model.city import City
+from model.country import Country
+from persistence.database import db, app
 
+class DataManagerTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['TESTING'] = True
+        db.create_all()
+        cls.data_manager = DataManager()
 
-class TestDataManager(unittest.TestCase):
-    def setUp(self):
-        """Setup initial conditions for tests"""
-        self.dm = DataManager()
-        self.user = User("Luis", "Dom", "luis12@gmai.com", "124")
-    
-    def test_save(self):
-        """Test saving an entity"""
-        self.dm.save(self.user)
-        self.assertEqual(self.dm.get(self.user.id, 'User'), self.user.to_dict())
+    @classmethod
+    def tearDownClass(cls):
+        db.session.remove()
+        db.drop_all()
 
-    def test_get(self):
-        """Test retrieving an entity"""
-        self.dm.save(self.user)
-        self.assertEqual(self.dm.get(self.user.id, 'User'), self.user.to_dict())
-        self.assertIsNone(self.dm.get('999', 'dict'))  # Testing non-existing entity
+    def test_save_and_get_city(self):
+        city = City(name='TestCity', population=1000, country_code='TC')
+        self.data_manager.save(city)
+        retrieved_city = self.data_manager.get(City, city.id)
+        self.assertIsNotNone(retrieved_city)
+        self.assertEqual(retrieved_city.name, 'TestCity')
 
-    def test_update(self):
-        """Test updating an entity"""
-        self.dm.save(self.user)
-        self.user.first_name = "Jhon"
-        self.user.last_name = "Doe"
-        self.dm.update(self.user)
-        user_old = self.dm.get(self.user.id, 'User')
-        self.assertEqual(user_old.get('first_name'), self.user.first_name)
-        self.assertEqual(user_old.get('last_name'), self.user.last_name)
-        #self.assertEqual(user_old.get('email'), updated_user.email)
-        #self.assertEqual(user_old.get('password'), updated_user.password)
+    def test_update_city(self):
+        city = City(name='UpdateCity', population=2000, country_code='UC')
+        self.data_manager.save(city)
+        city.name = 'UpdatedCity'
+        self.data_manager.update(city)
+        updated_city = self.data_manager.get(City, city.id)
+        self.assertEqual(updated_city.name, 'UpdatedCity')
 
-    def test_delete(self):
-        """Test deleting an entity"""
-        self.dm.save(self.user)
-        self.dm.delete('123', 'dict')
-        self.assertIsNone(self.dm.get('123', 'dict'))
+    def test_delete_city(self):
+        city = City(name='DeleteCity', population=3000, country_code='DC')
+        self.data_manager.save(city)
+        self.data_manager.delete(city)
+        deleted_city = self.data_manager.get(City, city.id)
+        self.assertIsNone(deleted_city)
+
+    def test_query_all_cities(self):
+        city1 = City(name='City1', population=1000, country_code='C1')
+        city2 = City(name='City2', population=2000, country_code='C2')
+        self.data_manager.save(city1)
+        self.data_manager.save(city2)
+        cities = self.data_manager.query_all(City)
+        self.assertEqual(len(cities), 2)
 
 if __name__ == '__main__':
     unittest.main()
