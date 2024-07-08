@@ -3,7 +3,7 @@ from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from model.base import Base  # Asegúrate de tener db configurado en database.py
+from model.base import Base
 
 class User(Base):
     """

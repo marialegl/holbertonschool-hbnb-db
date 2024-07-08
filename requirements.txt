@@ -22,6 +22,7 @@ packaging==24.1
 pathspec==0.12.1
 platformdirs==4.2.2
 PyJWT==2.8.0
+python-dotenv==1.0.1
 pytz==2024.1
 referencing==0.35.1
 requests==2.31.0
@@ -31,4 +32,3 @@ tk==0.1.0
 tomli==2.0.1
 urllib3==2.2.1
 Werkzeug==3.0.3
-python-dotenv==0.21.0
