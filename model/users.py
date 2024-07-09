@@ -3,7 +3,10 @@ from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from model.base import Base
+from model.base import Base, db
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 class User(Base):
     """
@@ -12,13 +15,20 @@ class User(Base):
     """
     __tablename__ = 'users'
 
-    id = Column(String(36), primary_key=True)
-    first_name = Column(String(50), nullable=False)
-    last_name = Column(String(50), nullable=False)
-    email = Column(String(100), unique=True, nullable=False)
-    password = Column(String(100), nullable=False)
-    create_time = Column(DateTime, default=datetime.now)
-    update_time = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    id = db.Column(db.String(36), primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    create_time = db.Column(db.DateTime, default=datetime.now)
+    update_time = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+    def set_password(self, password):
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password_hash, password)
 
     def to_dict(self):
         return {
@@ -26,7 +36,7 @@ class User(Base):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,
-            'password': self.password,
+            'is_admin': self.is_admin,
             'create_time': self.create_time.isoformat(),
             'update_time': self.update_time.isoformat()
         }

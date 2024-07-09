@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import uuid
 from flask import Flask, jsonify, request, abort
 from model.city import City
 from model.country import Country
