@@ -1,4 +1,5 @@
 #!usr/bin/python3
+from flask import current_app, json
 from persistence.persistence_manager import IPersistenceManager
 from persistence.database import db
 
@@ -7,10 +8,43 @@ class DataManager(IPersistenceManager):
     """
     Implements the persistence manager using SQLAlchemy for database operations.
     """
+    def __init__(self, file_path="data.json"):
+        self.file_path = file_path
+        if not current_app.config['USE_DATABASE']:
+            self.storage = self.load_from_file()
+        else:
+            self.storage = None
+
+    def load_from_file(self):
+        """
+        Loads data from the JSON file if it exists, otherwise returns an empty dictionary.
+        """
+        try:
+            with open(self.file_path, "r") as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    def save_to_file(self):
+        """
+        Saves the current storage dictionary to the JSON file
+        """
+        with open(self.file_path, "w") as file:
+            json.dump(self.storage, file, indent=4, default=str)
+
     
     def save(self, entity):
-        db.session.add(entity)
-        db.session.commit()
+
+        if current_app.config['USE_DATABASE']:
+            db.session.add(entity)
+            db.session.commit()
+        else:
+            entity_type = type(entity).__name__
+            if entity_type not in self.storage:
+                self.storage[entity_type] = {}
+            self.storage[entity_type][entity.id] = entity.to_dict()
+            self.save_to_file()
+
 
     def get(self, entity_type, entity_id):
         """
@@ -23,7 +57,10 @@ class DataManager(IPersistenceManager):
         Returns:
             The entity instance or None if not found.
         """
-        return db.session.get(entity_type, entity_id)
+        if current_app.config['USE_DATABASE']:
+            return db.session.query(entity_type).get(entity_id)
+        else:
+            return self.storage.get(entity_type, {}).get(entity_id, None)
 
     def update(self, entity):
         """
@@ -32,19 +69,33 @@ class DataManager(IPersistenceManager):
         Args:
             entity: The entity instance with updated data.
         """
-        db.session.commit()
+        if current_app.config['USE_DATABASE']:
+            db.session.merge(entity)
+            db.session.commit()
+        else:
+            entity_type = type(entity).__name__
+            if entity_type in self.storage and entity.id in self.storage[entity_type]:
+                self.storage[entity_type][entity.id] = entity.to_dict()
+                self.save_to_file()
 
-    def delete(self, entity):
+    def delete(self, entity_id, entity_type):
         """
         Deletes an entity from the database.
         
         Args:
             entity: The entity instance to delete.
         """
-        db.session.delete(entity)
-        db.session.commit()
+        if current_app.config['USE_DATABASE']:
+            entity = db.session.query(entity_type).get(entity_id)
+            if entity:
+                db.session.delete(entity)
+                db.session.commit()
+        else:
+            if entity_type in self.storage:
+                self.storage[entity_type].pop(entity_id, None)
+                self.save_to_file()
 
-    def query_all(self, entity_type):
+    def get_all(self, entity_type):
         """
         Retrieves all entities of a specific type.
         
@@ -54,7 +105,16 @@ class DataManager(IPersistenceManager):
         Returns:
             A list of entity instances.
         """
-        return db.session.query(entity_type).all()
+        if current_app.config['USE_DATABASE']:
+            return db.session.query(entity_type).all()
+        else:
+            if entity_type:
+                return [entity for entity_type_key, entities in self.storage.items()
+                        if entity_type_key == entity_type
+                        for entity in entities.values()]
+            else:
+                return [entity for entities in self.storage.values()
+                        for entity in entities.values()]
 
     def query_all_by_filter(self, entity_type, filter_condition):
         """
