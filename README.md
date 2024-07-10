@@ -5,7 +5,7 @@
 
 ## UML Diagram
 
-You can view the UML diagram [aquí](https://files.slack.com/files-tmb/T0423U1MW21-F076VSEAC0L-ceecf86746/diagrama_de_clases_uml_hbnb_720.jpg).
+You can view the UML diagram [aquí](https://files.slack.com/files-pri/T0423U1MW21-F07C4BQSFCH/diagrama_de_clases_uml_hbnb.png).
 
 
 ## Relational database schema
