@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """Operaciones CRUD y Gestión de Relaciones"""
+import sys
+import os
 import unittest
 from model.base import Base
 from model.city import City
