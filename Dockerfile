@@ -4,14 +4,15 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apk add --no-cache postgresql-dev gcc python3-dev musl-dev
+RUN pip install -r requirements.txt
 
-COPY . .
+COPY . /app
 
-EXPOSE 8000
+EXPOSE 5000
 
-ENV PORT 8000
+ENV PORT 5000
 
 VOLUME ["/app/data"]
 
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT} api.app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
