@@ -3,13 +3,20 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from model.users import User
 from persistence.data_manager import DataManager
-import re
+import re, os
+from config import ProductionConfig, DevelopmentConfig
 from uuid import UUID
 from flask_jwt_extended import JWTManager
 
 
 app = Flask(__name__)
 data_manager = DataManager()
+
+if os.environ.get('ENV') == 'production':
+    app.config.from_object(ProductionConfig)
+else:
+    app.config.from_object(DevelopmentConfig)
+
 app.config['JWT_SECRET_KEY'] = 'super-secret'
 app.config['USE_DATABASE'] = True
 jwt = JWTManager(app)
@@ -154,6 +161,6 @@ def delete_user(user_id):
 
 if __name__ == "__main__":
     with app.app_context():
-        if app.config['USE_DATABASE']:
+        if app.config['USE_DATABASE'] and os.environ.get('DATABASE_TYPE') == 'sqlite':
             db.create_all() 
     app.run(debug=True)

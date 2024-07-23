@@ -58,7 +58,7 @@ class User(Base):
 class Host(User):
     __tablename__ = 'hosts'
 
-    id = Column(String(36), primary_key=True)
+    id = Column(db.String(36), db.ForeignKey('users.id'), primary_key=True)
     name_place = relationship("Place", back_populates="host")
     amenities = relationship("Amenities", secondary="user_amenities")
 
@@ -78,7 +78,7 @@ class Host(User):
 class Guest(User):
     __tablename__ = 'guests'
 
-    id = Column(String(36), primary_key=True)
+    id = Column(String(36), db.ForeignKey('users.id'), primary_key=True)
     comment = relationship("Review", back_populates="guest")
 
     def add_review(self, comment):
