@@ -1,7 +1,7 @@
 #!usr/bin/python3
 from flask import current_app, json
 from persistence.persistence_manager import IPersistenceManager
-from persistence.database import db
+from api import db
 
 
 class DataManager(IPersistenceManager):

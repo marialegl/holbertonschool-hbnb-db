@@ -14,9 +14,9 @@ def create_app():
     
     # Configuración de la aplicación
     if os.environ.get('ENV') == 'production':
-        app.config.from_object('api.config.ProductionConfig')
+        app.config.from_object('config.ProductionConfig')
     else:
-        app.config.from_object('api.config.DevelopmentConfig')
+        app.config.from_object('config.DevelopmentConfig')
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dev.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
