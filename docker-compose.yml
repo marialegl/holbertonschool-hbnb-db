@@ -6,22 +6,22 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - FLASK_ENV=${FLASK_ENV}
+      - ENV=production
+      - DATABASE_URL=postgresql://user:password@db/prod_db
+      - JWT_SECRET_KEY=your_production_secret_key
     volumes:
       - .:/app
     depends_on:
       - db
 
   db:
-    image: postgres:13
+    image: postgres:latest
     environment:
-      POSTGRES_USER: username
+      POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: prod_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  db_data:
