@@ -27,7 +27,7 @@ class IPersistenceManager(ABC):
         pass
 
     @abstractmethod
-    def query_all(self, entity_type):
+    def get_all(self, entity_type):
         pass
 
     @abstractmethod
