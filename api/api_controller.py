@@ -5,7 +5,7 @@ from persistence.data_manager import DataManager
 import re
 from api import db
 from uuid import UUID
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, get_jwt
 
 
 data_manager = DataManager()
@@ -40,6 +40,10 @@ def is_valid_uuid(val):
 
 @bp.route("/users", methods=["POST"])
 def create_user():
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify(message='Administration rights required'), 403
+
     data = request.get_json()
     valid, message = validate_user_data(data)
 
@@ -87,6 +91,10 @@ def get_user(user_id):
 
 @bp.route("/users/<user_id>", methods=["PUT"])
 def update_user(user_id):
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify(message='Administration rights required'), 403
+
     data = request.get_json()
 
     if bp.config['USE_DATABASE']:
@@ -131,6 +139,10 @@ def update_user(user_id):
 
 @bp.route("/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify(message='Administration rights required'), 403    
+
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
 
