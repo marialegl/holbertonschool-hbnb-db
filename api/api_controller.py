@@ -4,6 +4,7 @@ from uuid import UUID
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt
+from flask import current_app
 
 from api import db
 from model.users import User
@@ -72,7 +73,7 @@ def get_users():
     from persistence.data_manager import DataManager
     data_manager = DataManager()
 
-    if bp.config['USE_DATABASE']:
+    if current_app.config['USE_DATABASE']:
         users = User.query.all()
         users = [user.to_dict() for user in users]
     else:
