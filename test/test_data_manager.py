@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """Pruebas para cada operación CRUD en tu DataManager"""
 import unittest
-from persistence.data_manager import DataManager
-from model.city import City
-from model.country import Country
+
 from persistence.database import db, app
+
+from model.city import City
+from persistence.json_data_manager import DataManager
+
 
 class DataManagerTestCase(unittest.TestCase):
     @classmethod
@@ -48,6 +50,7 @@ class DataManagerTestCase(unittest.TestCase):
         self.data_manager.save(city2)
         cities = self.data_manager.query_all(City)
         self.assertEqual(len(cities), 2)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,12 +1,14 @@
 #!/usr/bin/python3
-from sqlalchemy import Column, String, Boolean, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from datetime import datetime
-from model.base import Base, db
+
 from flask_bcrypt import Bcrypt
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+
+from model.base import Base, db
 
 bcrypt = Bcrypt()
+
 
 class User(Base):
     """

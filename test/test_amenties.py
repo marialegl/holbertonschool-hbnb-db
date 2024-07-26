@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """Unittest for Amenities"""
 
+import time
 import unittest
 from datetime import datetime
+
 from model.amenities import Amenities
-import time
+
 
 class TestAmenities(unittest.TestCase):
 
@@ -34,6 +36,7 @@ class TestAmenities(unittest.TestCase):
         amenity = Amenities(name="Pool", place="Hotel")
         expected_str = f"Amenity(ID: {amenity.id}, Name: {amenity.name}, Place: {amenity.place}, Created: {amenity.create_time}, Last Updated: {amenity.update_time})"
         self.assertEqual(str(amenity), expected_str)
+
 
 if __name__ == '__main__':
     unittest.main()

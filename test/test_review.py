@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """Unittest for Review"""
 
-
 import unittest
 from datetime import datetime
+
 from model.review import Review
 
 
@@ -50,6 +50,7 @@ class TestReview(unittest.TestCase):
         """Test deleting the review."""
         self.review.delete()
         self.assertTrue(self.review.deleted)
+
 
 if __name__ == "__main__":
     unittest.main()

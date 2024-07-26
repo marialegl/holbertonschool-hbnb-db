@@ -1,9 +1,11 @@
 #!/usr/bin/python3
-import unittest
 import json
+import unittest
+
 from api.api_place import app, data_manager
-from model.city import City
 from model.amenities import Amenities
+from model.city import City
+
 
 class FlaskTestCase(unittest.TestCase):
 
@@ -155,6 +157,7 @@ class FlaskTestCase(unittest.TestCase):
 
         get_response = self.app.get(f'/places/{place_id}')
         self.assertEqual(get_response.status_code, 404)
+
 
 if __name__ == '__main__':
     unittest.main()

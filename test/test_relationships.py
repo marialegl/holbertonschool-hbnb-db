@@ -1,10 +1,13 @@
 #!/usr/bin/python3
 """relaciones estén bien gestionadas."""
 import unittest
-from persistence.data_manager import DataManager
+
+from persistence.database import db, app
+
 from model.city import City
 from model.country import Country
-from persistence.database import db, app
+from persistence.json_data_manager import DataManager
+
 
 class RelationshipTestCase(unittest.TestCase):
     @classmethod
@@ -29,6 +32,7 @@ class RelationshipTestCase(unittest.TestCase):
         retrieved_country = self.data_manager.get(Country, country.id)
         self.assertEqual(len(retrieved_country.cities), 1)
         self.assertEqual(retrieved_country.cities[0].name, 'TestCity')
+
 
 if __name__ == '__main__':
     unittest.main()

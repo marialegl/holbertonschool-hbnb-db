@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 from flask import Flask, jsonify, request
+
 from model.amenities import Amenities
-from persistence.data_manager import DataManager
-from persistence.database import db
+from persistence.json_data_manager import DataManager
 
 app = Flask(__name__)
 data_manager = DataManager()
+
 
 @app.route('/amenities', methods=['POST'])
 def create_amenity():
@@ -18,10 +19,12 @@ def create_amenity():
     data_manager.save(amenity)
     return jsonify(amenity.to_dict()), 201
 
+
 @app.route('/amenities', methods=['GET'])
 def get_amenities():
     amenities = data_manager.query_all(Amenities)  # Usar la clase en lugar del nombre
     return jsonify([amenity.to_dict() for amenity in amenities]), 200
+
 
 @app.route('/amenities/<amenity_id>', methods=['GET'])
 def get_amenity(amenity_id):
@@ -29,6 +32,7 @@ def get_amenity(amenity_id):
     if not amenity:
         return jsonify({"error": "Amenity not found"}), 404
     return jsonify(amenity.to_dict()), 200
+
 
 @app.route('/amenities/<amenity_id>', methods=['PUT'])
 def update_amenity(amenity_id):
@@ -44,6 +48,7 @@ def update_amenity(amenity_id):
     data_manager.update(amenity)
     return jsonify(amenity.to_dict()), 200
 
+
 @app.route('/amenities/<amenity_id>', methods=['DELETE'])
 def delete_amenity(amenity_id):
     amenity = data_manager.get(Amenities, amenity_id)  # Usar la clase en lugar del nombre
@@ -51,6 +56,7 @@ def delete_amenity(amenity_id):
         return jsonify({"error": "Amenity not found"}), 404
     data_manager.delete(amenity)
     return '', 204
+
 
 if __name__ == '__main__':
     app.run(debug=True)

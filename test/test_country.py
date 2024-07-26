@@ -2,6 +2,7 @@
 """Unittest for Country"""
 
 import unittest
+
 from model.country import Country
 
 
@@ -43,6 +44,7 @@ class TestCountry(unittest.TestCase):
         self.country.add_state("State2")
         expected_str = f"Country(ID: {self.country.id}, Name: Testland, States: [State1, State2])"
         self.assertEqual(str(self.country), expected_str)
+
 
 if __name__ == '__main__':
     unittest.main()

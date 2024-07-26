@@ -1,23 +1,24 @@
 #!/usr/bin/python3
-from flask import Blueprint, jsonify, request, abort, Flask
-from model.place import Place
-from model.city import City
-from model.amenities import Amenities
-from model.users import User
-from persistence.data_manager import DataManager
-from persistence.database import db
+from flask import jsonify, request, abort, Flask
 
+from model.amenities import Amenities
+from model.city import City
+from model.place import Place
+from persistence.json_data_manager import DataManager
 
 app = Flask(__name__)
 data_manager = DataManager()
+
 
 # Función para encontrar una ciudad por su ID
 def find_city(city_id):
     return data_manager.get(City, city_id)
 
+
 # Función para encontrar amenidades por sus IDs
 def find_amenities(amenity_ids):
     return data_manager.query_all_by_filter(Amenities, Amenities.id.in_(amenity_ids))
+
 
 # Función para validar coordenadas
 def validate_coordinates(latitude, longitude):
@@ -26,12 +27,14 @@ def validate_coordinates(latitude, longitude):
     if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
         abort(400, description="Invalid geographical coordinates")
 
+
 # Función para validar que un valor sea un entero no negativo
 def validate_non_negative_integer(value, field_name):
     if value is None:
         abort(400, description=f"{field_name} is required")
     if not isinstance(value, int) or value < 0:
         abort(400, description=f"{field_name} must be a non-negative integer")
+
 
 # Función para validar el precio
 def validate_price(price):
@@ -40,15 +43,18 @@ def validate_price(price):
     if not isinstance(price, (int, float)) or price < 0:
         abort(400, description="Price per night must be a valid non-negative numerical value")
 
+
 def validate_city_id(city_id):
     if not city_id or not find_city(city_id):
         abort(400, description="Invalid city_id, city does not exist")
+
 
 def validate_amenity_ids(amenity_ids):
     if not isinstance(amenity_ids, list):
         abort(400, description="Amenity_ids must be a list")
     if not data_manager.query_all_by_filter(Amenities, Amenities.id.in_(amenity_ids)).count() == len(amenity_ids):
         abort(400, description="One or more amenity_ids are invalid")
+
 
 @app.route('/places', methods=['POST'])
 def create_place():
@@ -85,25 +91,28 @@ def create_place():
 
     return jsonify(new_place.to_dict()), 201
 
+
 @app.route('/places', methods=['GET'])
 def get_places():
     places = data_manager.query_all(Place)
     return jsonify([place.to_dict() for place in places]), 200
+
 
 @app.route('/places/<place_id>', methods=['GET'])
 def get_place(place_id):
     place = data_manager.get(Place, place_id)
     if not place:
         abort(404, description="Place not found")
-    
+
     return jsonify(place.to_dict()), 200
+
 
 @app.route('/places/<place_id>', methods=['PUT'])
 def update_place(place_id):
     place = data_manager.get(Place, place_id)
     if not place:
         abort(404, description="Place not found")
-    
+
     data = request.get_json()
     if 'latitude' in data or 'longitude' in data:
         validate_coordinates(data.get('latitude', place.latitude), data.get('longitude', place.longitude))
@@ -131,20 +140,22 @@ def update_place(place_id):
     place.number_of_bathrooms = data.get('number_of_bathrooms', place.number_of_bathrooms)
     place.price_per_night = data.get('price_per_night', place.price_per_night)
     place.max_guests = data.get('max_guests', place.max_guests)
-    place.amenities = find_amenities(data.get('amenity_ids', []))  
-    
+    place.amenities = find_amenities(data.get('amenity_ids', []))
+
     data_manager.update(place)
     return jsonify(place.to_dict()), 200
+
 
 @app.route('/places/<place_id>', methods=['DELETE'])
 def delete_place(place_id):
     place = data_manager.get(Place, place_id)
     if not place:
         abort(404, description="Place not found")
-    
+
     data_manager.delete(place)
 
     return '', 204
+
 
 if __name__ == '__main__':
     app.run(debug=True)
