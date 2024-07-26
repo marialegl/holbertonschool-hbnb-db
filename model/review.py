@@ -1,9 +1,10 @@
 #!usr/bin/python3
 """ Class Review with the necessary attributes and methods."""
 from datetime import datetime
-from model.base import Base
+
 from sqlalchemy import Column, String, Integer, ForeignKey
-from sqlalchemy.orm import relationship
+
+from model.base import Base
 
 
 class Review(Base):
@@ -16,7 +17,6 @@ class Review(Base):
     comment = Column(String(500))
     deleted = Column(String(10), nullable=False, default='False')
 
-
     def __init__(self, user_id, place_id, rating, comment):
         super().__init__()
         self.user_id = user_id
@@ -28,7 +28,7 @@ class Review(Base):
             raise ValueError("Rating must be between 1 and 5")
 
     def to_dict(self):
-        return{
+        return {
             'id': self.id,
             'user_id': self.user_id,
             'place_id': self.place_id,
@@ -37,7 +37,6 @@ class Review(Base):
             'created_at': self.create_time.isoformat(),
             'updated_at': self.update_time.isoformat()
         }
-
 
     def update(self, **kwargs):
         if self.deleted:

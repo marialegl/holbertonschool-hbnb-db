@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-from datetime import datetime
 import uuid
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import validates
 
 db = SQLAlchemy()
+
 
 # Definir una clase base que extienda de db.Model para compatibilidad con SQLAlchemy
 class Base(db.Model):

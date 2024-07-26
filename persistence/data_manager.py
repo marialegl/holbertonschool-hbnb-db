@@ -1,16 +1,23 @@
 #!usr/bin/python3
-from flask import current_app, json
-from persistence.persistence_manager import IPersistenceManager
+from flask import json
+
 from api import db
+from persistence.persistence_manager import IPersistenceManager
 
 
 class DataManager(IPersistenceManager):
     """
     Implements the persistence manager using SQLAlchemy for database operations.
     """
+
+    __use_db = False
+
     def __init__(self, file_path="data.json"):
+        from run import app
+        self.__use_db = app.config['USE_DATABASE']
+
         self.file_path = file_path
-        if not current_app.config['USE_DATABASE']:
+        if not self.__use_db:
             self.storage = self.load_from_file()
         else:
             self.storage = None
@@ -32,10 +39,9 @@ class DataManager(IPersistenceManager):
         with open(self.file_path, "w") as file:
             json.dump(self.storage, file, indent=4, default=str)
 
-    
     def save(self, entity):
 
-        if current_app.config['USE_DATABASE']:
+        if self.__use_db:
             db.session.add(entity)
             db.session.commit()
         else:
@@ -44,7 +50,6 @@ class DataManager(IPersistenceManager):
                 self.storage[entity_type] = {}
             self.storage[entity_type][entity.id] = entity.to_dict()
             self.save_to_file()
-
 
     def get(self, entity_type, entity_id):
         """
@@ -57,7 +62,7 @@ class DataManager(IPersistenceManager):
         Returns:
             The entity instance or None if not found.
         """
-        if current_app.config['USE_DATABASE']:
+        if self.__use_db:
             return db.session.query(entity_type).get(entity_id)
         else:
             return self.storage.get(entity_type, {}).get(entity_id, None)
@@ -69,7 +74,7 @@ class DataManager(IPersistenceManager):
         Args:
             entity: The entity instance with updated data.
         """
-        if current_app.config['USE_DATABASE']:
+        if self.__use_db:
             db.session.merge(entity)
             db.session.commit()
         else:
@@ -83,9 +88,9 @@ class DataManager(IPersistenceManager):
         Deletes an entity from the database.
         
         Args:
-            entity: The entity instance to delete.
+            entity_id: The entity instance to delete.
         """
-        if current_app.config['USE_DATABASE']:
+        if self.__use_db:
             entity = db.session.query(entity_type).get(entity_id)
             if entity:
                 db.session.delete(entity)
@@ -105,7 +110,7 @@ class DataManager(IPersistenceManager):
         Returns:
             A list of entity instances.
         """
-        if current_app.config['USE_DATABASE']:
+        if self.__use_db:
             return db.session.query(entity_type).all()
         else:
             if entity_type:

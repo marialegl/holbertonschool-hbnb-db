@@ -1,9 +1,8 @@
 #!/usr/bin/python3
-import unittest
 import json
+import unittest
+
 from api.api_controller import app, data_manager
-from model.users import User
-import uuid
 
 
 class FlaskAppTests(unittest.TestCase):
@@ -13,7 +12,7 @@ class FlaskAppTests(unittest.TestCase):
         # Crear una nueva instancia de data_manager para cada prueba
         self.data_manager = data_manager
         self.data_manager.storage = {'Users': {}}
-    
+
     def tearDown(self):
         # Asegúrate de limpiar el estado después de cada prueba
         self.data_manager.storage = {'Users': {}}
@@ -151,6 +150,7 @@ class FlaskAppTests(unittest.TestCase):
             self.assertEqual(data['error'], 'Invalid user ID')
         except json.JSONDecodeError:
             self.fail("La respuesta no es un JSON válido.")
+
 
 if __name__ == '__main__':
     unittest.main()

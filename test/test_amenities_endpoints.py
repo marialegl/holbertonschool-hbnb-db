@@ -2,9 +2,10 @@
 """Unittest for Amenities Endpoints"""
 
 import unittest
+
 from api.api_amenities import app
 from model.amenities import Amenities
-from persistence.data_manager import DataManager
+
 
 class TestAmenitiesAPI(unittest.TestCase):
 
@@ -88,6 +89,7 @@ class TestAmenitiesAPI(unittest.TestCase):
 
         response = self.app.post('/amenities', json={'name': 'Pool'})
         self.assertEqual(response.status_code, 409)
+
 
 if __name__ == '__main__':
     unittest.main()

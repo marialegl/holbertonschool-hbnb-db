@@ -1,7 +1,9 @@
 from datetime import datetime
+
 from sqlalchemy import Column, String, Integer
-from sqlalchemy.orm import relationship
+
 from model.base import Base
+
 
 class City(Base):
     """
@@ -13,7 +15,7 @@ class City(Base):
     name = Column(String(100), nullable=False)
     population = Column(Integer, nullable=False)
     country_code = Column(String(5), nullable=False)
-    
+
     def __init__(self, name, population, country_code):
         super().__init__()
         self.name = name

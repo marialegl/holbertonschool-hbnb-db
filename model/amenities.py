@@ -1,8 +1,11 @@
 #!/usr/bin/python3
-from datetime import datetime
-from model.base import Base
-from sqlalchemy import Column, String, DateTime
 import uuid
+from datetime import datetime
+
+from sqlalchemy import Column, String, DateTime
+
+from model.base import Base
+
 
 class Amenities(Base):
     """

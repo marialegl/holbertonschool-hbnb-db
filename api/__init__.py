@@ -1,17 +1,19 @@
 #!/usr/bin/python3
+import os
+
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
-import os
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
+
 def create_app():
     app = Flask(__name__)
-    
+
     # Configuración de la aplicación
     if os.environ.get('ENV') == 'production':
         app.config.from_object('config.ProductionConfig')
@@ -31,7 +33,6 @@ def create_app():
     from api.api_login import bp as api_login_bp
     app.register_blueprint(api_user_bp)
     app.register_blueprint(api_login_bp)
-
 
     with app.app_context():
         if app.config['USE_DATABASE'] and os.environ.get('DATABASE_TYPE') == 'sqlite':

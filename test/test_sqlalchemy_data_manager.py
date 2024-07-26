@@ -2,9 +2,12 @@
 """clases de prueba específicas que hereden de PersistenceManagerTestCase y proporcionen 
 una implementación concreta de la interfaz para el sistema de persistencia"""
 import unittest
-from persistence.data_manager import DataManager
+
 from persistence.database import db, app
 from tests.test_persistence_manager import PersistenceManagerTestCase
+
+from persistence.data_manager import DataManager
+
 
 class SQLAlchemyDataManagerTestCase(PersistenceManagerTestCase, unittest.TestCase):
     @classmethod
@@ -18,6 +21,7 @@ class SQLAlchemyDataManagerTestCase(PersistenceManagerTestCase, unittest.TestCas
     def tearDownClass(cls):
         db.session.remove()
         db.drop_all()
+
 
 if __name__ == '__main__':
     unittest.main()

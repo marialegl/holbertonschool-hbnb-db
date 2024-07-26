@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """Operaciones CRUD y Gestión de Relaciones"""
-import sys
-import os
 import unittest
-from model.base import Base
+
+from persistence.database import db, app
+
 from model.city import City
 from model.country import Country
-from persistence.database import db, app
+
 
 class CRUDOperationsTestCase(unittest.TestCase):
     @classmethod
@@ -65,6 +65,7 @@ class CRUDOperationsTestCase(unittest.TestCase):
             country = Country.query.filter_by(name='TestCountry').first()
             self.assertEqual(len(country.cities), 1)
             self.assertEqual(country.cities[0].name, 'TestCity')
+
 
 if __name__ == '__main__':
     unittest.main()

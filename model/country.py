@@ -1,6 +1,7 @@
-from model.base import Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+
+from model.base import Base
 
 
 class Country(Base):

@@ -3,6 +3,7 @@
 
 import unittest
 from datetime import datetime
+
 from model.place import Place
 
 
@@ -75,6 +76,7 @@ class TestPlace(unittest.TestCase):
     def test_place_str(self):
         """Test the string representation of the place."""
         self.assertEqual(str(self.place), f"Place({self.place.id}, Test Place, Testville, None)")
+
 
 if __name__ == "__main__":
     unittest.main()

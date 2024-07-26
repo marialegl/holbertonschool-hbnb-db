@@ -1,8 +1,10 @@
 #!usr/bin/python3
 """ Class State with the necessary attributes and methods."""
 from datetime import datetime
+
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+
 from model.base import Base
 
 
@@ -13,7 +15,6 @@ class State(Base):
     name = Column(String(100), nullable=False)
     country = Column(String(100), nullable=False)
     cities = relationship('City', back_populates='state')
-
 
     def __init__(self, name, country):
         super().__init__()

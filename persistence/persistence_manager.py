@@ -1,6 +1,7 @@
 #!usr/bin/python3
 from abc import ABC, abstractmethod
 
+
 class IPersistenceManager(ABC):
     """
     Abstract interface for managing the persistence of entities.

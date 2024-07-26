@@ -1,14 +1,17 @@
 #!/usr/bin/python3
+from datetime import datetime
+
 from flask import Flask, jsonify, request, abort
-from model.review import Review
+from persistence.database import db
+
 from model.place import Place
+from model.review import Review
 from model.users import User
 from persistence.data_manager import DataManager
-from persistence.database import db
-from datetime import datetime
 
 app = Flask(__name__)
 data_manager = DataManager()
+
 
 def validate_review_data(data):
     """Validates the input data for creating or updating a review."""
@@ -20,6 +23,7 @@ def validate_review_data(data):
         abort(404, description=f"Place with ID '{data['place_id']}' not found")
     if not isinstance(data['rating'], int) or not (1 <= data['rating'] <= 5):
         abort(400, description="Rating must be an integer between 1 and 5")
+
 
 @app.route('/reviews', methods=['POST'])
 def create_review():
@@ -34,10 +38,12 @@ def create_review():
     data_manager.save(new_review)
     return jsonify(new_review.to_dict()), 201
 
+
 @app.route('/reviews', methods=['GET'])
 def get_reviews():
     reviews = data_manager.query_all(Review)
     return jsonify([review.to_dict() for review in reviews]), 200
+
 
 @app.route('/reviews/<review_id>', methods=['GET'])
 def get_review(review_id):
@@ -45,6 +51,7 @@ def get_review(review_id):
     if not review:
         abort(404, description="Review not found")
     return jsonify(review.to_dict()), 200
+
 
 @app.route('/reviews/<review_id>', methods=['PUT'])
 def update_review(review_id):
@@ -62,6 +69,7 @@ def update_review(review_id):
     data_manager.update(review)
     return jsonify(review.to_dict()), 200
 
+
 @app.route('/users/<user_id>/reviews', methods=['GET'])
 def get_user_reviews(user_id):
     user = data_manager.get(User, user_id)
@@ -69,6 +77,7 @@ def get_user_reviews(user_id):
         abort(404, description="User not found")
     reviews = data_manager.query_all_by_filter(Review, Review.user_id == user_id)
     return jsonify([review.to_dict() for review in reviews]), 200
+
 
 @app.route('/places/<place_id>/reviews', methods=['GET'])
 def get_place_reviews(place_id):
@@ -78,6 +87,7 @@ def get_place_reviews(place_id):
     reviews = data_manager.query_all_by_filter(Review, Review.place_id == place_id)
     return jsonify([review.to_dict() for review in reviews]), 200
 
+
 @app.route('/reviews/<review_id>', methods=['DELETE'])
 def delete_review(review_id):
     review = data_manager.get(Review, review_id)
@@ -85,6 +95,7 @@ def delete_review(review_id):
         abort(404, description="Review not found")
     data_manager.delete(review)
     return '', 204
+
 
 if __name__ == '__main__':
     with app.app_context():

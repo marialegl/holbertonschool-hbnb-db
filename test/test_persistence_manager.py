@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """pruebas para verificar que las implementaciones de IPersistenceManager
 manejen las operaciones CRUD correctamente."""
-import unittest
 from abc import ABC, abstractmethod
+
 from model.city import City
-from model.country import Country
+
 
 class PersistenceManagerTestCase(ABC):
     """
@@ -60,4 +60,3 @@ class PersistenceManagerTestCase(ABC):
         self.persistence_manager.save(city3)
         cities = self.persistence_manager.query_all_by_filter(City, City.country_code == 'FC1')
         self.assertEqual(len(cities), 2)
-
