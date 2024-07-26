@@ -10,6 +10,9 @@ You can view the UML diagram [aquí](https://files.slack.com/files-pri/T0423U1MW
 
 ## Relational database schema
 
+![Relational database schema](https://files.slack.com/files-pri/T0423U1MW21-F07BK1GLVDL/diagrama_de_clases_uml_hbnb_-_p__gina_2.png)
+
+
 You can view the relational database schema [aquí](https://files.slack.com/files-pri/T0423U1MW21-F07BK1GLVDL/diagrama_de_clases_uml_hbnb_-_p__gina_2.png).
 
 

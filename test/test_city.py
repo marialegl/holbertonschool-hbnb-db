@@ -3,7 +3,9 @@
 
 import unittest
 from datetime import datetime
-from model.city import City 
+
+from model.city import City
+
 
 class TestCity(unittest.TestCase):
 
@@ -35,7 +37,7 @@ class TestCity(unittest.TestCase):
         self.city.remove_place("Manhattan")
         self.assertNotIn("Manhattan", self.city.place)
         self.assertIn("Brooklyn", self.city.place)
-        
+
         # Test removing a place that does not exist
         self.city.remove_place("Queens")
         self.assertNotIn("Queens", self.city.place)
@@ -45,6 +47,7 @@ class TestCity(unittest.TestCase):
         self.assertIn("City: New York", str_output)
         self.assertIn("State: New York", str_output)
         self.assertIn("Place(s): Manhattan", str_output)
+
 
 if __name__ == '__main__':
     unittest.main()

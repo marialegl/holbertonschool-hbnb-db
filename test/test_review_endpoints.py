@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 import unittest
+
 from api.api_review import app
 from model.review import Review
 from persistence.data_manager import DataManager
+
 
 class ReviewAPITestCase(unittest.TestCase):
     def setUp(self):
@@ -104,6 +106,7 @@ class ReviewAPITestCase(unittest.TestCase):
             # Missing 'text'
         })
         self.assertEqual(response.status_code, 400)
+
 
 if __name__ == '__main__':
     unittest.main()

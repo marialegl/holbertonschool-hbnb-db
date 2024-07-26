@@ -1,15 +1,15 @@
 #!/usr/bin/python3
-from flask import Blueprint, jsonify, request
-from model.users import User
-from persistence.data_manager import DataManager
 import re
-from api import db
 from uuid import UUID
-from flask_jwt_extended import JWTManager, get_jwt
 
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_jwt
 
-data_manager = DataManager()
+from api import db
+from model.users import User
+
 bp = Blueprint('api_controller', __name__)
+
 
 def validate_email(email):
     email_regex = r"^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$"
@@ -40,6 +40,9 @@ def is_valid_uuid(val):
 
 @bp.route("/users", methods=["POST"])
 def create_user():
+    from persistence.data_manager import DataManager
+    data_manager = DataManager()
+
     claims = get_jwt()
     if not claims.get('is_admin'):
         return jsonify(message='Administration rights required'), 403
@@ -54,7 +57,6 @@ def create_user():
     if existing_user:
         return jsonify({"error": "Email already exists"}), 409
 
-
     user = User(
         first_name=data["first_name"],
         last_name=data["last_name"],
@@ -67,6 +69,9 @@ def create_user():
 
 @bp.route("/users", methods=["GET"])
 def get_users():
+    from persistence.data_manager import DataManager
+    data_manager = DataManager()
+
     if bp.config['USE_DATABASE']:
         users = User.query.all()
         users = [user.to_dict() for user in users]
@@ -77,20 +82,25 @@ def get_users():
 
 @bp.route("/users/<user_id>", methods=["GET"])
 def get_user(user_id):
+    from persistence.data_manager import DataManager
+    data_manager = DataManager()
     if bp.config['USE_DATABASE']:
         user = User.query.get(user_id)
     else:
-        user = data_manager.get(user_id, "User") 
+        user = data_manager.get(user_id, "User")
 
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
     if user is None:
         return jsonify({"error": "User not found"}), 404
-    return jsonify(user.to_dict() if bp.config['USE_DATABASE'] else user), 200 
+    return jsonify(user.to_dict() if bp.config['USE_DATABASE'] else user), 200
 
 
 @bp.route("/users/<user_id>", methods=["PUT"])
 def update_user(user_id):
+    from persistence.data_manager import DataManager
+    data_manager = DataManager()
+
     claims = get_jwt()
     if not claims.get('is_admin'):
         return jsonify(message='Administration rights required'), 403
@@ -114,7 +124,7 @@ def update_user(user_id):
         return jsonify({"error": message}), 400
 
     existing_user = data_manager.query_all_by_filter(User,
-                User.email == data["email"], User.id != user_id)
+                                                     User.email == data["email"], User.id != user_id)
     if existing_user:
         return jsonify({"error": "Email already exists"}), 409
 
@@ -135,13 +145,16 @@ def update_user(user_id):
         updated_user.id = user_id
         data_manager.update(updated_user)
     return jsonify(user.to_dict()), 200
-    
+
 
 @bp.route("/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
+    from persistence.data_manager import DataManager
+    data_manager = DataManager()
+
     claims = get_jwt()
     if not claims.get('is_admin'):
-        return jsonify(message='Administration rights required'), 403    
+        return jsonify(message='Administration rights required'), 403
 
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400

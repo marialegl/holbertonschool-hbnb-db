@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 """Verifica que el sistema pueda cambiar entre almacenamiento en archivo y base de datos."""
-import unittest
 import os
-from persistence.data_manager import DataManager
-from model.city import City
-from model.country import Country
+import unittest
+
 from persistence.database import db, app
+
+from model.city import City
+from persistence.data_manager import DataManager
+
 
 class PersistenceSwitchingTestCase(unittest.TestCase):
     def setUp(self):
@@ -40,6 +42,7 @@ class PersistenceSwitchingTestCase(unittest.TestCase):
         # Cleanup PostgreSQL
         db.session.remove()
         db.drop_all()
+
 
 if __name__ == '__main__':
     unittest.main()

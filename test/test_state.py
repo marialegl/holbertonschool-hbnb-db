@@ -3,7 +3,9 @@
 
 import unittest
 from datetime import datetime
+
 from model.state import State
+
 
 class TestState(unittest.TestCase):
 
@@ -58,6 +60,7 @@ class TestState(unittest.TestCase):
         """Test that an empty country raises a ValueError."""
         with self.assertRaises(ValueError):
             State(name="Test State", country="")
+
 
 if __name__ == "__main__":
     unittest.main()

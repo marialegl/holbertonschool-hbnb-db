@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """Unittest for City Endpoints"""
 
-import unittest
 import json
+import unittest
+
 from api.api_country_city import app, data_manager
 from model.city import City
+
 
 class FlaskTestCase(unittest.TestCase):
 
@@ -65,6 +67,7 @@ class FlaskTestCase(unittest.TestCase):
         response = self.app.delete(f'/cities/{city.id}')
         self.assertEqual(response.status_code, 204)
         self.assertIsNone(data_manager.get(city.id, 'City'))
+
 
 if __name__ == '__main__':
     unittest.main()
