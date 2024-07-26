@@ -3,7 +3,7 @@ import re
 from uuid import UUID
 
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import get_jwt
+from flask_jwt_extended import jwt_required, get_jwt
 from flask import current_app
 
 from api import db
@@ -40,6 +40,7 @@ def is_valid_uuid(val):
 
 
 @bp.route("/users", methods=["POST"])
+@jwt_required()
 def create_user():
     from persistence.data_manager import DataManager
     data_manager = DataManager()
