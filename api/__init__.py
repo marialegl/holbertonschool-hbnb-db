@@ -34,7 +34,7 @@ def create_app():
     from api.api_controller import bp as api_user_bp
     from api.api_login import bp as api_login_bp
     app.register_blueprint(api_user_bp, url_prefix='/api')
-    app.register_blueprint(api_login_bp)
+    app.register_blueprint(api_login_bp, url_prefix='/api')
 
     with app.app_context():
         if app.config['USE_DATABASE'] and os.environ.get('DATABASE_TYPE') == 'sqlite':
