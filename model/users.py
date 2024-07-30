@@ -15,9 +15,9 @@ class User(Base):
         This class will inherit the atributes
         to the class Host and Guest
     """
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
-    id = db.Column(db.String(36), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -57,34 +57,34 @@ class User(Base):
  email: {self.email})"
 
 
-class Host(User):
-    __tablename__ = 'hosts'
-
-    id = Column(db.String(36), db.ForeignKey('users.id'), primary_key=True)
-    name_place = relationship("Place", back_populates="host")
-    amenities = relationship("Amenities", secondary="user_amenities")
-
-    def add_place(self, place):
-        self.name_place.append(place)
-
-    def remove_place(self, place):
-        self.name_place.remove(place)
-
-    def add_amenities(self, amenities):
-        self.amenities.append(amenities)
-
-    def remove_amenities(self, amenities):
-        self.amenities.remove(amenities)
-
-
-class Guest(User):
-    __tablename__ = 'guests'
-
-    id = Column(String(36), db.ForeignKey('users.id'), primary_key=True)
-    comment = relationship("Review", back_populates="guest")
-
-    def add_review(self, comment):
-        self.comment.append(comment)
-
-    def remove_review(self, comment):
-        self.comment.remove(comment)
+# class Host(User):
+#     __tablename__ = 'hosts'
+#
+#     id = Column(db.String(36), db.ForeignKey('users.id'), primary_key=True)
+#     name_place = relationship("Place", back_populates="host")
+#     amenities = relationship("Amenities", secondary="user_amenities")
+#
+#     def add_place(self, place):
+#         self.name_place.append(place)
+#
+#     def remove_place(self, place):
+#         self.name_place.remove(place)
+#
+#     def add_amenities(self, amenities):
+#         self.amenities.append(amenities)
+#
+#     def remove_amenities(self, amenities):
+#         self.amenities.remove(amenities)
+#
+#
+# class Guest(User):
+#     __tablename__ = 'guests'
+#
+#     id = Column(String(36), db.ForeignKey('users.id'), primary_key=True)
+#     comment = relationship("Review", back_populates="guest")
+#
+#     def add_review(self, comment):
+#         self.comment.append(comment)
+#
+#     def remove_review(self, comment):
+#         self.comment.remove(comment)

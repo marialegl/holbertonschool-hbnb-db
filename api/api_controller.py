@@ -13,38 +13,11 @@ bp = Blueprint('api_controller', __name__)
 data_manager = DataManager().get_data_manager()
 
 
-def validate_email(email):
-    email_regex = r"^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$"
-    return re.match(email_regex, email)
-
-
-def validate_name(name):
-    return isinstance(name, str) and name.strip() != ""
-
-
-def validate_user_data(data):
-    if not validate_email(data.get("email", "")):
-        return False, "Invalid email format."
-    if not validate_name(data.get("first_name", "")):
-        return False, "First name cannot be empty."
-    if not validate_name(data.get("last_name", "")):
-        return False, "Last name cannot be empty."
-    return True, ""
-
-
-def is_valid_uuid(val):
-    try:
-        UUID(str(val))
-        return True
-    except ValueError:
-        return False
-
-
 @bp.route("/users", methods=["POST"])
 def create_user():
-    claims = get_jwt()
-    if not claims.get('is_admin'):
-        return jsonify(message='Administration rights required'), 403
+    # claims = get_jwt()
+    # if not claims.get('is_admin'):
+    #     return jsonify(message='Administration rights required'), 403
 
     data = request.get_json()
     valid, message = validate_user_data(data)
@@ -69,7 +42,26 @@ def create_user():
 @bp.route("/users", methods=["GET"])
 def get_users():
     users = data_manager.get_all(User)
-    return jsonify(users), 200
+    return jsonify([user.to_dict() for user in users]), 200
+
+
+def validate_email(email):
+    email_regex = r"^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$"
+    return re.match(email_regex, email)
+
+
+def validate_name(name):
+    return isinstance(name, str) and name.strip() != ""
+
+
+def validate_user_data(data):
+    if not validate_email(data.get("email", "")):
+        return False, "Invalid email format."
+    if not validate_name(data.get("first_name", "")):
+        return False, "First name cannot be empty."
+    if not validate_name(data.get("last_name", "")):
+        return False, "Last name cannot be empty."
+    return True, ""
 
 #
 # @bp.route("/users/<user_id>", methods=["GET"])
@@ -94,7 +86,7 @@ def get_users():
 #
 #     data = request.get_json()
 #
-#     if bp.config['USE_DATABASE']:
+#     if bp.config['USE_DATABASE']: co
 #         user = User.query.get(user_id)
 #     else:
 #         user = data_manager.get(user_id, "User")

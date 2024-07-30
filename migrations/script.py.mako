@@ -5,10 +5,10 @@ Revises: ${down_revision | comma,n}
 Create Date: ${create_date}
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
-import sqlalchemy as sa
 ${imports if imports else ""}
 
 # revision identifiers, used by Alembic.
@@ -19,8 +19,12 @@ depends_on: Union[str, Sequence[str], None] = ${repr(depends_on)}
 
 
 def upgrade() -> None:
-    ${upgrades if upgrades else "pass"}
+    op.execute("""
+        insert sql query for upgrade here
+    """)
 
 
 def downgrade() -> None:
-    ${downgrades if downgrades else "pass"}
+    op.execute("""
+        insert sql query for downgrade here
+    """)
